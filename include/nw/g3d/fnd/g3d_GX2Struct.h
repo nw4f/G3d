@@ -13,6 +13,12 @@ namespace nw { namespace g3d { namespace fnd { namespace internal {
 
 typedef ::GX2Surface GX2SurfaceData;
 typedef ::GX2Texture GX2TextureData;
+
+struct GX2LoopVarData
+{
+    u32 _regs[GX2_NUM_LOOP_VAR_U32_WORDS];
+};
+
 typedef ::GX2VertexShader GX2VertexShaderData;
 typedef ::GX2GeometryShader GX2GeometryShaderData;
 typedef ::GX2PixelShader GX2PixelShaderData;

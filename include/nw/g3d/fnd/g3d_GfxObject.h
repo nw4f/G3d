@@ -41,12 +41,28 @@ struct GfxBuffer_t
         GX2StreamOutContext* pCtxPtr;
 #endif
         u32 ctxUIntPtr;
+
+#if NW_G3D_IS_GL && !defined( NW_STRIP_GL )
+        // Custom
+        u32 bufferType;
+#endif
     };
 };
 
 class GfxBuffer : public GfxBuffer_t
 {
     NW_G3D_GFX_OBJECT(GfxBuffer);
+
+#if NW_G3D_IS_GL && !defined( NW_STRIP_GL )
+public:
+    enum BufferType : u32
+    {
+        BUFFER_TYPE_INVALID         = 0,
+        BUFFER_TYPE_ELEMENT_ARRAY,
+        BUFFER_TYPE_ARRAY,
+        BUFFER_TYPE_UNIFORM,
+    };
+#endif
 
 public:
     void Setup();
@@ -218,10 +234,8 @@ public:
     void* GetMipPtr();
     const void* GetMipPtr() const;
 
-    /*
-    void* GetImagePtr(int mipLevel);
+    // void* GetImagePtr(int mipLevel);
     const void* GetImagePtr(int mipLevel) const;
-    */
 
     u32 GetAlignment() const { return gx2Texture.surface.alignment; }
     u32 GetPitch() const { return gx2Texture.surface.pitch; }
@@ -254,7 +268,7 @@ public:
 
     void Setup();
     void Cleanup();
-    // void UpdateRegs();
+    void UpdateRegs();
     void DCFlush() const;
     void CalcSize();
 

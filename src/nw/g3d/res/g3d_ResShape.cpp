@@ -2,6 +2,10 @@
 #include <limits>
 #include <nw/g3d/res/g3d_ResFile.h>
 
+#if NW_G3D_IS_GL && !defined( NW_STRIP_GL )
+    #include <nw/g3d/fnd/g3d_GX2Utility.h>
+#endif
+
 namespace nw { namespace g3d { namespace res {
 
 void ResBuffer::Setup()
@@ -68,11 +72,24 @@ void ResMesh::DrawSubMesh(int submeshIndex, int submeshCount, int instances /*= 
     u32 offset = pFirstSubMesh->GetOffset();
     const ResSubMesh* pLastSubMesh = GetSubMesh(submeshIndex + submeshCount - 1);
     u32 count = ((pLastSubMesh->GetOffset() - offset) >> strideShift) + pLastSubMesh->GetCount();
+#if NW_G3D_IS_GX2
     GX2PrimitiveType primType = GetPrimitiveType();
     GX2IndexFormat format = GetIndexFormat();
     const GfxBuffer* pIdxBuffer = GetIdxBuffer()->GetGfxBuffer();
     GX2DrawIndexedEx(primType, count, format,
         AddOffset(pIdxBuffer->GetData(), offset), 0, instances);
+#elif NW_G3D_IS_GL && !defined( NW_STRIP_GL )
+    GetIdxBuffer()->GetGfxBuffer()->LoadIndices();
+    const GLPrimitiveType& primType = FindGLPrimitiveType(GetPrimitiveType());
+    u32 format = GetIndexFormat() == GX2_INDEX_FORMAT_U16 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+    glDrawElementsInstancedBaseVertex(primType.drawType, count, format,
+        reinterpret_cast<void*>(offset), instances, 0);
+    NW_G3D_GL_ASSERT();
+#else
+    NW_G3D_UNUSED(submeshIndex);
+    NW_G3D_UNUSED(instances);
+    NW_G3D_UNUSED(count);
+#endif
 }
 
 } } } // namespace nw::g3d::res

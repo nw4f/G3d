@@ -123,6 +123,10 @@ struct GfxAlphaTest_t
     GX2AlphaTestReg gx2AlphaTest;
 };
 
+#if NW_G3D_IS_GL && !defined( NW_STRIP_GL )
+extern bool s_AlphaTestEnable;
+#endif
+
 class GfxAlphaTest : public GfxAlphaTest_t
 {
     NW_G3D_GFX_STATE(GfxAlphaTest);

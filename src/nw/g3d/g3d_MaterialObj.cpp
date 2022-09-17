@@ -69,7 +69,9 @@ bool MaterialObj::Init(const InitArg& arg, void* pBuffer, size_t bufferSize)
 bool MaterialObj::SetupBlockBuffer(void* pBuffer, size_t bufferSize)
 {
     NW_G3D_ASSERT(bufferSize == 0 || pBuffer);
+#if NW_G3D_IS_HOST_CAFE
     NW_G3D_ASSERT_ADDR_ALIGNMENT(pBuffer, BLOCK_BUFFER_ALIGNMENT);
+#endif // NW_G3D_IS_HOST_CAFE
     NW_G3D_ASSERT((m_Flag & BLOCK_BUFFER_VALID) == 0);
 
     size_t size = CalcBlockBufferSize();

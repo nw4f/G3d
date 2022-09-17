@@ -60,6 +60,6 @@ void DebugPrint(const char* format, ...);
 
 } } // namespace nw::g3d
 
-#define NW_G3D_DEBUG_BREAK()
+#define NW_G3D_DEBUG_BREAK() (void)(0)
 
 #endif // NW_G3D_ASSERT_H_

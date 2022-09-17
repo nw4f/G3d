@@ -329,7 +329,9 @@ size_t ShapeObj::CalcBlockBufferSize() const
 bool ShapeObj::SetupBlockBuffer(void* pBuffer, size_t bufferSize)
 {
     NW_G3D_ASSERT_NOT_NULL(pBuffer);
+#if NW_G3D_IS_HOST_CAFE
     NW_G3D_ASSERT_ADDR_ALIGNMENT(pBuffer, BLOCK_BUFFER_ALIGNMENT);
+#endif // NW_G3D_IS_HOST_CAFE
     NW_G3D_ASSERT((m_Flag & BLOCK_BUFFER_VALID) == 0);
 
     size_t size = CalcBlockBufferSize();
@@ -356,10 +358,6 @@ bool ShapeObj::SetupBlockBuffer(void* pBuffer, size_t bufferSize)
         for (int idxBuffer = 0; idxBuffer < m_NumBuffering; ++idxBuffer)
         {
             ShpBlock* pShpBuffer = static_cast<ShpBlock*>(shpBlock.GetData(idxBuffer));
-
-
-
-
             if (IsBlockSwapEnabled())
             {
                 Copy32<true>(&pShpBuffer->worldMtx, &worldMtx, sizeof(Mtx34) >> 2);
