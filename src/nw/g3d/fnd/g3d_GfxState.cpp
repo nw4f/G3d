@@ -383,7 +383,8 @@ GX2StencilFunction GfxDepthCtrl::GetBackStencilFail() const
 #endif // __WUT__
 }
 
-bool s_AlphaTestEnable = false;
+u32 s_AlphaFunc     = GL_ALWAYS;
+f32 s_AlphaRefValue = 0.5f;
 
 void GfxAlphaTest::Load() const
 {
@@ -393,8 +394,14 @@ void GfxAlphaTest::Load() const
     if (GetAlphaTestEnable())
     {
       //NW_G3D_WARNING(false, "Alpha test is not supported.\n");
+        s_AlphaFunc     = GL_NEVER + GetAlphaFunc();
+        s_AlphaRefValue = GetRefValue();
     }
-    s_AlphaTestEnable = GetAlphaTestEnable();
+    else
+    {
+        s_AlphaFunc     = GL_ALWAYS;
+        s_AlphaRefValue = 0.5f;
+    }
 #endif
 }
 
