@@ -383,8 +383,12 @@ GX2StencilFunction GfxDepthCtrl::GetBackStencilFail() const
 #endif // __WUT__
 }
 
+#if NW_G3D_IS_GL && !defined( NW_STRIP_GL )
+
 u32 s_AlphaFunc     = GL_ALWAYS;
 f32 s_AlphaRefValue = 0.5f;
+
+#endif
 
 void GfxAlphaTest::Load() const
 {

@@ -124,8 +124,10 @@ struct GfxAlphaTest_t
 };
 
 #if NW_G3D_IS_GL && !defined( NW_STRIP_GL )
+
 extern u32 s_AlphaFunc;
 extern f32 s_AlphaRefValue;
+
 #endif
 
 class GfxAlphaTest : public GfxAlphaTest_t
