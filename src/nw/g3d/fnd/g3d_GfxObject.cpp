@@ -734,7 +734,7 @@ void GfxSampler::UpdateRegs()
     };
     glSamplerParameteri(handle, GL_TEXTURE_MAG_FILTER, tblFilter[GetMagFilter()]);
     glSamplerParameteri(handle, GL_TEXTURE_MIN_FILTER,
-        tblFilter[/* GetMipFilter() << 1 | */ GetMinFilter()]);
+        tblFilter[GetMipFilter() << 1 | GetMinFilter()]);
     glSamplerParameteri(handle, GL_TEXTURE_MAX_ANISOTROPY_EXT, tblAniso[GetMaxAniso()]);
 
     // LOD
