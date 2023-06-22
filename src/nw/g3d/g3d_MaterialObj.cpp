@@ -29,7 +29,9 @@ size_t MaterialObj::CalcBufferSize(const InitArg& arg)
 bool MaterialObj::Init(const InitArg& arg, void* pBuffer, size_t bufferSize)
 {
     NW_G3D_ASSERT(bufferSize == 0 || pBuffer);
+#if NW_G3D_IS_HOST_CAFE
     NW_G3D_WARNING(IsAligned(pBuffer, BUFFER_ALIGNMENT), "pBuffer must be aligned.");
+#endif // NW_G3D_IS_HOST_CAFE
 
     Sizer& sizer = arg.GetSizer();
     if (!sizer.IsValid())

@@ -146,7 +146,9 @@ size_t SkeletalAnimObj::CalcBufferSize(const InitArg& arg)
 bool SkeletalAnimObj::Init(const InitArg& arg, void* pBuffer, size_t bufferSize)
 {
     NW_G3D_ASSERT(bufferSize == 0 || pBuffer);
+#if NW_G3D_IS_HOST_CAFE
     NW_G3D_WARNING(IsAligned(pBuffer, BUFFER_ALIGNMENT), "pBuffer must be aligned.");
+#endif // NW_G3D_IS_HOST_CAFE
 
     Sizer& sizer = arg.GetSizer();
     if (!sizer.IsValid())
@@ -462,7 +464,9 @@ size_t SkeletalAnimBlender::CalcBufferSize(const InitArg& arg)
 bool SkeletalAnimBlender::Init(const InitArg& arg, void* pBuffer, size_t bufferSize)
 {
     NW_G3D_ASSERT(bufferSize == 0 || pBuffer);
+#if NW_G3D_IS_HOST_CAFE
     NW_G3D_WARNING(IsAligned(pBuffer, BUFFER_ALIGNMENT), "pBuffer must be aligned.");
+#endif // NW_G3D_IS_HOST_CAFE
 
     Sizer& sizer = arg.GetSizer();
     if (!sizer.IsValid())
