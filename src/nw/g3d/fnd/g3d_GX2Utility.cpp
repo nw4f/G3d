@@ -126,7 +126,7 @@ const GLPrimitiveType& FindGLPrimitiveType(GX2PrimitiveType type)
     return s_GLPrimType[type];
 }
 
-struct GLSurfaceCmp : public std::binary_function<GLSurfaceFormat, GX2SurfaceFormat, bool>
+struct GLSurfaceCmp /* : public std::binary_function<GLSurfaceFormat, GX2SurfaceFormat, bool> */
 {
     bool operator ()(const GLSurfaceFormat& lhs, GX2SurfaceFormat rhs) const
     {
@@ -139,7 +139,7 @@ const GLSurfaceFormat& FindGLFormat(GX2SurfaceFormat format)
     return *std::find_if(
         s_GLSurfaceFormat,
         s_GLSurfaceFormat + (sizeof(s_GLSurfaceFormat) / sizeof(GLSurfaceFormat) - 1),
-        std::bind2nd(GLSurfaceCmp(), format));
+        std::bind(GLSurfaceCmp(), std::placeholders::_1, format));
 }
 
 const GLSurfaceFormat& FindGLDepthFormat(GX2SurfaceFormat format)
@@ -147,7 +147,7 @@ const GLSurfaceFormat& FindGLDepthFormat(GX2SurfaceFormat format)
     return *std::find_if(
         s_GLDepthFormat,
         s_GLDepthFormat + (sizeof(s_GLDepthFormat) / sizeof(GLSurfaceFormat) - 1),
-        std::bind2nd(GLSurfaceCmp(), format));
+        std::bind(GLSurfaceCmp(), std::placeholders::_1, format));
 }
 
 #endif

@@ -248,7 +248,7 @@ float Math::SinIdx(u32 idx)
     typedef internal::SinCosSample Sample;
 
     u32 tblidx = (idx >> Sample::FRAC_BIT) & Sample::INDEX_MASK;
-    float fraction = static_cast<float>(idx & Sample::FRAC_MASK) / Sample::FRAC_SIZE;
+    float fraction = static_cast<float>(idx & Sample::FRAC_MASK) / static_cast<int>(Sample::FRAC_SIZE);
     const Sample& sample = internal::gSinCosTable[tblidx];
 
     return sample.sinValue + sample.sinDelta * fraction;
@@ -260,7 +260,7 @@ float Math::CosIdx(u32 idx)
     typedef internal::SinCosSample Sample;
 
     u32 tblidx = (idx >> Sample::FRAC_BIT) & Sample::INDEX_MASK;
-    float fraction = static_cast<float>(idx & Sample::FRAC_MASK) / Sample::FRAC_SIZE;
+    float fraction = static_cast<float>(idx & Sample::FRAC_MASK) / static_cast<int>(Sample::FRAC_SIZE);
     const Sample& sample = internal::gSinCosTable[tblidx];
 
     return sample.cosValue + sample.cosDelta * fraction;
@@ -309,7 +309,7 @@ void Math::SinCosIdx(float* pSin, float* pCos, u32 idx)
     typedef internal::SinCosSample Sample;
 
     u32 tblidx = (idx >> Sample::FRAC_BIT) & Sample::INDEX_MASK;
-    float fraction = static_cast<float>(idx & Sample::FRAC_MASK) / Sample::FRAC_SIZE;
+    float fraction = static_cast<float>(idx & Sample::FRAC_MASK) / static_cast<int>(Sample::FRAC_SIZE);
     const Sample& sample = internal::gSinCosTable[tblidx];
 
     *pSin = sample.sinValue + sample.sinDelta * fraction;

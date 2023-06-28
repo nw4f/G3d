@@ -168,7 +168,7 @@ struct GLAttribInternal
     NW_G3D_DEF_FMT(32_32_32_32_FLOAT,   TC_R32_G32_B32_A32_FLOAT,   4,  0,  GL_FLOAT)
 };
 
-struct AttribInternalCmp : public std::binary_function<GLAttribInternal, u8, bool>
+struct AttribInternalCmp /* : public std::binary_function<GLAttribInternal, u8, bool> */
 {
     bool operator ()(const GLAttribInternal& lhs, u8 rhs) const
     {
@@ -182,7 +182,7 @@ const GLAttribInternal& FindGLAttribInternal(u8 surfaceFormat)
     return *std::find_if(
         s_GLAttribInternal,
         s_GLAttribInternal + (sizeof(s_GLAttribInternal) / sizeof(GLAttribInternal) - 1),
-        std::bind2nd(AttribInternalCmp(), surfaceFormat));
+        std::bind(AttribInternalCmp(), std::placeholders::_1, surfaceFormat));
 }
 
 struct TexImageArg
@@ -1262,14 +1262,14 @@ void GfxFetchShader::SetFormat(void* pShader, int attribIndex, GX2AttribFormat f
     WriteInst(pVFetchInst, 0, inst0);
 
     u32 inst1 = ReadInst(pVFetchInst, 1);
-    u32 fmtType = (format & ATTRIB_BIT_FLOAT) ? ATTRIB_FMT_SCALED :
-        (format & ATTRIB_BIT_INT) ? ATTRIB_FMT_INT : ATTRIB_FMT_NORMALIZED;
+    u32 fmtType = (format & static_cast<u32>(ATTRIB_BIT_FLOAT)) ? ATTRIB_FMT_SCALED :
+        (format & static_cast<u32>(ATTRIB_BIT_INT)) ? ATTRIB_FMT_INT : ATTRIB_FMT_NORMALIZED;
     NW_G3D_SET_FLAG_VALUE(inst1, NUM_FORMAT_ALL, fmtType);
     NW_G3D_SET_FLAG_VALUE(inst1, DST_SEL_X, GX2_GET_COMPONENT_X_R(fmt.compSel));
     NW_G3D_SET_FLAG_VALUE(inst1, DST_SEL_Y, GX2_GET_COMPONENT_Y_G(fmt.compSel));
     NW_G3D_SET_FLAG_VALUE(inst1, DST_SEL_Z, GX2_GET_COMPONENT_Z_B(fmt.compSel));
     NW_G3D_SET_FLAG_VALUE(inst1, DST_SEL_W, GX2_GET_COMPONENT_W_A(fmt.compSel));
-    NW_G3D_SET_FLAG_VALUE(inst1, FORMAT_COMP_ALL,  format & ATTRIB_BIT_SIGNED ? 1 : 0);
+    NW_G3D_SET_FLAG_VALUE(inst1, FORMAT_COMP_ALL,  format & static_cast<u32>(ATTRIB_BIT_SIGNED) ? 1 : 0);
     NW_G3D_SET_FLAG_VALUE(inst1, DATA_FORMAT, fmt.surfaceFormat);
     WriteInst(pVFetchInst, 1, inst1);
 
