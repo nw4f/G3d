@@ -4,6 +4,7 @@
 #include <nw/g3d/math/g3d_MathCommon.h>
 
 #include <algorithm>
+#include <bit>
 
 namespace nw { namespace g3d { namespace fnd {
 
@@ -411,15 +412,10 @@ void GfxAlphaTest::Load() const
 
 void GfxAlphaTest::SetRefValue(f32 value)
 {
-    union
-    {
-        f32 _f32;
-        u32 _u32;
-    } reg = { value };
 #ifdef __WUT__
-    gx2AlphaTest.sx_alpha_ref = reg._u32;
+    gx2AlphaTest.sx_alpha_ref = std::bit_cast<u32>(value);
 #else
-    gx2AlphaTest.reg[1] = reg._u32;
+    gx2AlphaTest.reg[1] = std::bit_cast<u32>(value);
 #endif // __WUT__
 }
 
@@ -443,16 +439,11 @@ GX2CompareFunction GfxAlphaTest::GetAlphaFunc() const
 
 f32 GfxAlphaTest::GetRefValue() const
 {
-    union
-    {
-        u32 _u32;
-        f32 _f32;
 #ifdef __WUT__
-    } reg = { gx2AlphaTest.sx_alpha_ref };
+    return std::bit_cast<f32>(gx2AlphaTest.sx_alpha_ref);
 #else
-    } reg = { gx2AlphaTest.reg[1] };
+    return std::bit_cast<f32>(gx2AlphaTest.reg[1]);
 #endif // __WUT__
-    return reg._f32;
 }
 
 void GfxColorCtrl::Load() const

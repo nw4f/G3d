@@ -154,22 +154,12 @@ private:
 
     static void Swap(s32* data)
     {
-        union
-        {
-            s32* _s32;
-            bit32* _bit32;
-        } ptr = { data };
-        Swap(ptr._bit32);
+        Swap(reinterpret_cast<bit32*>(data));
     }
 
     static void Swap(f32* data)
     {
-        union
-        {
-            f32* _f32;
-            bit32* _bit32;
-        } ptr = { data };
-        Swap(ptr._bit32);
+        Swap(reinterpret_cast<bit32*>(data));
     }
 
     static void Swap(bit32* data)

@@ -7,6 +7,8 @@
 #include <nw/g3d/ut/g3d_Flag.h>
 #include <nw/g3d/math/g3d_MathCommon.h>
 
+#include <bit>
+
 namespace nw { namespace g3d { namespace fnd {
 
 namespace {
@@ -90,13 +92,7 @@ float U4_6ToFloat(u32 x)
 NW_G3D_INLINE
 float S5_6ToFloat(u32 x)
 {
-    union
-    {
-        u32 u;
-        s32 s;
-    } x32;
-    x32.u = x << 20;
-    return FastCast<float>(static_cast<s16>(x32.s >> 20)) / 64.0f;
+    return FastCast<float>(static_cast<s16>(std::bit_cast<s32, u32>(x << 20) >> 20)) / 64.0f;
 }
 
 #define GX2_SURFACE_FORMAT_T_R32_G32_B32_UINT       0x0000012f
