@@ -1415,7 +1415,7 @@ void Endian<isReversed>::Swap(nw::g3d::fnd::internal::GX2VertexShaderData* data)
 {
     if (NW_G3D_STATIC_CONDITION(!isReversed))
     {
-        SwapArray<fnd::internal::GX2LoopVarData>(&reinterpret_cast<Offset&>(data->_loopVars), data->_numLoops);
+        SwapArray<fnd::internal::GX2LoopVarData>(reinterpret_cast<Offset*>(&data->_loopVars), data->_numLoops);
     }
 
     for (int i = 0; i < GX2_NUM_VERTEX_SHADER_REGISTERS; ++i)
@@ -1423,10 +1423,10 @@ void Endian<isReversed>::Swap(nw::g3d::fnd::internal::GX2VertexShaderData* data)
         Swap(&data->_regs[i]);
     }
     Swap(&data->shaderSize);
-    Swap(&reinterpret_cast<Offset&>(data->shaderPtr));
+    Swap(reinterpret_cast<Offset*>(&data->shaderPtr));
     Swap(reinterpret_cast<bit32*>(&data->shaderMode));
     Swap(&data->_numLoops);
-    Swap(&reinterpret_cast<Offset&>(data->_loopVars));
+    Swap(reinterpret_cast<Offset*>(&data->_loopVars));
     Swap(&data->ringItemsize);
     Swap(reinterpret_cast<bit32*>(&data->hasStreamOut));
     for (int i = 0; i < GX2_MAX_STREAMOUT_BUFFERS; ++i)
@@ -1436,7 +1436,7 @@ void Endian<isReversed>::Swap(nw::g3d::fnd::internal::GX2VertexShaderData* data)
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
     {
-        SwapArray<fnd::internal::GX2LoopVarData>(&reinterpret_cast<Offset&>(data->_loopVars), data->_numLoops);
+        SwapArray<fnd::internal::GX2LoopVarData>(reinterpret_cast<Offset*>(&data->_loopVars), data->_numLoops);
     }
 }
 
@@ -1445,7 +1445,7 @@ void Endian<isReversed>::Swap(nw::g3d::fnd::internal::GX2GeometryShaderData* dat
 {
     if (NW_G3D_STATIC_CONDITION(!isReversed))
     {
-        SwapArray<fnd::internal::GX2LoopVarData>(&reinterpret_cast<Offset&>(data->_loopVars), data->_numLoops);
+        SwapArray<fnd::internal::GX2LoopVarData>(reinterpret_cast<Offset*>(&data->_loopVars), data->_numLoops);
     }
 
     for (int i = 0; i < GX2_NUM_GEOMETRY_SHADER_REGISTERS; ++i)
@@ -1453,12 +1453,12 @@ void Endian<isReversed>::Swap(nw::g3d::fnd::internal::GX2GeometryShaderData* dat
         Swap(&data->_regs[i]);
     }
     Swap(&data->shaderSize);
-    Swap(&reinterpret_cast<Offset&>(data->shaderPtr));
+    Swap(reinterpret_cast<Offset*>(&data->shaderPtr));
     Swap(&data->copyShaderSize);
-    Swap(&reinterpret_cast<Offset&>(data->copyShaderPtr));
+    Swap(reinterpret_cast<Offset*>(&data->copyShaderPtr));
     Swap(reinterpret_cast<bit32*>(&data->shaderMode));
     Swap(&data->_numLoops);
-    Swap(&reinterpret_cast<Offset&>(data->_loopVars));
+    Swap(reinterpret_cast<Offset*>(&data->_loopVars));
     Swap(&data->ringItemsize);
     Swap(reinterpret_cast<bit32*>(&data->hasStreamOut));
     for (int i = 0; i < GX2_MAX_STREAMOUT_BUFFERS; ++i)
@@ -1468,7 +1468,7 @@ void Endian<isReversed>::Swap(nw::g3d::fnd::internal::GX2GeometryShaderData* dat
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
     {
-        SwapArray<fnd::internal::GX2LoopVarData>(&reinterpret_cast<Offset&>(data->_loopVars), data->_numLoops);
+        SwapArray<fnd::internal::GX2LoopVarData>(reinterpret_cast<Offset*>(&data->_loopVars), data->_numLoops);
     }
 }
 
@@ -1477,7 +1477,7 @@ void Endian<isReversed>::Swap(nw::g3d::fnd::internal::GX2PixelShaderData* data)
 {
     if (NW_G3D_STATIC_CONDITION(!isReversed))
     {
-        SwapArray<fnd::internal::GX2LoopVarData>(&reinterpret_cast<Offset&>(data->_loopVars), data->_numLoops);
+        SwapArray<fnd::internal::GX2LoopVarData>(reinterpret_cast<Offset*>(&data->_loopVars), data->_numLoops);
     }
 
     for (int i = 0; i < GX2_NUM_PIXEL_SHADER_REGISTERS; ++i)
@@ -1485,14 +1485,14 @@ void Endian<isReversed>::Swap(nw::g3d::fnd::internal::GX2PixelShaderData* data)
         Swap(&data->_regs[i]);
     }
     Swap(&data->shaderSize);
-    Swap(&reinterpret_cast<Offset&>(data->shaderPtr));
+    Swap(reinterpret_cast<Offset*>(&data->shaderPtr));
     Swap(reinterpret_cast<bit32*>(&data->shaderMode));
     Swap(&data->_numLoops);
-    Swap(&reinterpret_cast<Offset&>(data->_loopVars));
+    Swap(reinterpret_cast<Offset*>(&data->_loopVars));
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
     {
-        SwapArray<fnd::internal::GX2LoopVarData>(&reinterpret_cast<Offset&>(data->_loopVars), data->_numLoops);
+        SwapArray<fnd::internal::GX2LoopVarData>(reinterpret_cast<Offset*>(&data->_loopVars), data->_numLoops);
     }
 }
 
