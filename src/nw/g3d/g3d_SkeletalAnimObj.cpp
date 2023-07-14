@@ -229,6 +229,57 @@ BindResult SkeletalAnimObj::Bind(const ResSkeleton* pSkeleton)
     return result;
 }
 
+BindResult SkeletalAnimObj::Bind(const SkeletonObj* pSkeletonObj)
+{
+    NW_G3D_ASSERT_NOT_NULL(pSkeletonObj);
+    return Bind(pSkeletonObj->GetResource());
+}
+
+BindResult SkeletalAnimObj::Bind(const ResModel* pModel)
+{
+    NW_G3D_ASSERT_NOT_NULL(pModel);
+    return Bind(pModel->GetSkeleton());
+}
+
+BindResult SkeletalAnimObj::Bind(const ModelObj* pModelObj)
+{
+    NW_G3D_ASSERT_NOT_NULL(pModelObj);
+    return Bind(pModelObj->GetSkeleton()->GetResource());
+}
+
+void SkeletalAnimObj::BindFast(const ResSkeleton* pSkeleton)
+{
+    NW_G3D_ASSERT(IsAcceptable(pSkeleton));
+    NW_G3D_ASSERT(pSkeleton == m_pRes->GetBindSkeleton());
+
+    AnimBindTable& bindTable = GetBindTable();
+    bindTable.ClearAll(pSkeleton->GetBoneCount());
+    bindTable.BindAll(m_pRes->ref().ofsBindIndexArray.to_ptr<u16>());
+
+    SetTargetBound();
+    SkeletalAnimObj::ClearResult(pSkeleton);
+}
+
+void SkeletalAnimObj::BindFast(const ResModel* pModel)
+{
+    NW_G3D_ASSERT_NOT_NULL(pModel);
+    BindFast(pModel->GetSkeleton());
+}
+
+void SkeletalAnimObj::ClearResult()
+{
+    NW_G3D_ASSERT_NOT_NULL(m_pRes);
+
+    BoneAnimResult* pResultArray = GetResultArray();
+
+    for (int idxAnim = 0, numAnim = GetAnimCount(); idxAnim < numAnim; ++idxAnim)
+    {
+        ResBoneAnim* pBoneAnim = GetBoneAnim(idxAnim);
+        BoneAnimResult* pResult = &pResultArray[idxAnim];
+        pBoneAnim->Init(pResult, NULL);
+    }
+}
+
 void SkeletalAnimObj::ClearResult(const ResSkeleton* pSkeleton)
 {
     NW_G3D_ASSERT_NOT_NULL(m_pRes);
@@ -289,6 +340,12 @@ void SkeletalAnimObj::Calc()
         (this->*m_pFuncCalcImpl)();
         UpdateLastFrame();
     }
+}
+
+void SkeletalAnimObj::ApplyTo(ModelObj* pModelObj) const
+{
+    NW_G3D_ASSERT_NOT_NULL(pModelObj);
+    ApplyTo(pModelObj->GetSkeleton());
 }
 
 void SkeletalAnimObj::ApplyTo(SkeletonObj* pSkeletonObj) const
