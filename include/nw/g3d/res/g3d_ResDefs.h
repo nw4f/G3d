@@ -10,11 +10,11 @@
 #define NW_G3D_RES_FIELD_DIC_LOOKUP_IDX_DECL(name)                                                 \
     int Get##name##Index(const char* str) const                                                    \
     {                                                                                              \
-        return NW_G3D_RES_DIC(ref().ofs##name##Dic)->FindIndex(str);                               \
+        return ResDicType::FindIndex(NW_G3D_RES_DIC(ref().ofs##name##Dic), str);                   \
     }                                                                                              \
     int Get##name##Index(const ResName* str) const                                                 \
     {                                                                                              \
-        return NW_G3D_RES_DIC(ref().ofs##name##Dic)->FindIndex(str);                               \
+        return ResDicType::FindIndex(NW_G3D_RES_DIC(ref().ofs##name##Dic), str);                   \
     }                                                                                              \
     const char* Get##name##Name(int elemIndex) const                                               \
     {                                                                                              \
@@ -27,22 +27,22 @@
     int Get##name##Count() const { return ref().num##name; }                                       \
     type* Get##name(const char* str)                                                               \
     {                                                                                              \
-        void* ptr = NW_G3D_RES_DIC(ref().ofs##name##Dic)->Find(str);                               \
+        void* ptr = ResDicType::Find(NW_G3D_RES_DIC(ref().ofs##name##Dic), str);                   \
         return type::ResCast(static_cast<type##Data*>(ptr));                                       \
     }                                                                                              \
     type* Get##name(const ResName* str)                                                            \
     {                                                                                              \
-        void* ptr = NW_G3D_RES_DIC(ref().ofs##name##Dic)->Find(str);                               \
+        void* ptr = ResDicType::Find(NW_G3D_RES_DIC(ref().ofs##name##Dic), str);                   \
         return type::ResCast(static_cast<type##Data*>(ptr));                                       \
     }                                                                                              \
     const type* Get##name(const char* str) const                                                   \
     {                                                                                              \
-        void* ptr = NW_G3D_RES_DIC(ref().ofs##name##Dic)->Find(str);                               \
+        void* ptr = ResDicType::Find(NW_G3D_RES_DIC(ref().ofs##name##Dic), str);                   \
         return type::ResCast(static_cast<type##Data*>(ptr));                                       \
     }                                                                                              \
     const type* Get##name(const ResName* str) const                                                \
     {                                                                                              \
-        void* ptr = NW_G3D_RES_DIC(ref().ofs##name##Dic)->Find(str);                               \
+        void* ptr = ResDicType::Find(NW_G3D_RES_DIC(ref().ofs##name##Dic), str);                   \
         return type::ResCast(static_cast<type##Data*>(ptr));                                       \
     }                                                                                              \
     NW_G3D_RES_FIELD_DIC_LOOKUP_IDX_DECL(name)                                                     \
@@ -69,11 +69,11 @@
     int Get##name##Count() const { return ref().num##name; }                                       \
     const char* Get##name(const char* str) const                                                   \
     {                                                                                              \
-        return static_cast<const char*>(NW_G3D_RES_DIC(ref().ofs##name##Dic)->Find(str));          \
+        return static_cast<const char*>(ResDicType::Find(NW_G3D_RES_DIC(ref().ofs##name##Dic), str)); \
     }                                                                                              \
     const char* Get##name(const ResName* str) const                                                \
     {                                                                                              \
-        return static_cast<const char*>(NW_G3D_RES_DIC(ref().ofs##name##Dic)->Find(str));          \
+        return static_cast<const char*>(ResDicType::Find(NW_G3D_RES_DIC(ref().ofs##name##Dic), str)); \
     }                                                                                              \
     const char* Get##name(int elemIndex) const                                                     \
     {                                                                                              \

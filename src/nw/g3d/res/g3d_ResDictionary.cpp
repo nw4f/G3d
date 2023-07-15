@@ -20,61 +20,89 @@ u32 GetBit(const ResName* name, u32 refBit)
 
 }
 
-void* ResDicPatricia::Find(const char* str) const
+void* ResDicPatricia::Find_(const char* str) const
 {
-    if (this != NULL)
+    NW_G3D_ASSERT_NOT_NULL(str);
+    Node* pNode = FindNode(str, strlen(str));
+    if (pNode)
     {
-        NW_G3D_ASSERT_NOT_NULL(str);
-        Node* pNode = FindNode(str, strlen(str));
-        if (pNode)
-        {
-            return pNode->ofsData.to_ptr();
-        }
+        return pNode->ofsData.to_ptr();
     }
 
     return NULL;
 }
 
-void* ResDicPatricia::Find(const ResName* name) const
+void* ResDicPatricia::Find_(const ResName* name) const
 {
-    if (this != NULL)
+    NW_G3D_ASSERT_NOT_NULL(name);
+    Node* pNode = FindNode(name);
+    if (pNode)
     {
-        NW_G3D_ASSERT_NOT_NULL(name);
-        Node* pNode = FindNode(name);
-        if (pNode)
-        {
-            return pNode->ofsData.to_ptr();
-        }
+        return pNode->ofsData.to_ptr();
     }
 
     return NULL;
 }
 
-int ResDicPatricia::FindIndex(const char* str) const
+int ResDicPatricia::FindIndex_(const char* str) const
 {
-    if (this != NULL)
+    NW_G3D_ASSERT_NOT_NULL(str);
+    const Node* pNode = FindNode(str, strlen(str));
+    if (pNode)
     {
-        NW_G3D_ASSERT_NOT_NULL(str);
-        const Node* pNode = FindNode(str, strlen(str));
-        if (pNode)
-        {
-            return static_cast<int>(std::distance(ref().node + 1, pNode));
-        }
+        return static_cast<int>(std::distance(ref().node + 1, pNode));
     }
 
     return -1;
 }
 
-int ResDicPatricia::FindIndex(const ResName* name) const
+int ResDicPatricia::FindIndex_(const ResName* name) const
 {
-    if (this != NULL)
+    NW_G3D_ASSERT_NOT_NULL(name);
+    const Node* pNode = FindNode(name);
+    if (pNode)
     {
-        NW_G3D_ASSERT_NOT_NULL(name);
-        const Node* pNode = FindNode(name);
-        if (pNode)
-        {
-            return static_cast<int>(std::distance(ref().node + 1, pNode));
-        }
+        return static_cast<int>(std::distance(ref().node + 1, pNode));
+    }
+
+    return -1;
+}
+
+void* ResDicPatricia::Find(const ResDicPatricia* pDic, const char* str)
+{
+    if (pDic != NULL)
+    {
+        return pDic->Find_(str);
+    }
+
+    return NULL;
+}
+
+void* ResDicPatricia::Find(const ResDicPatricia* pDic, const ResName* name)
+{
+    if (pDic != NULL)
+    {
+        return pDic->Find_(name);
+    }
+
+    return NULL;
+}
+
+int ResDicPatricia::FindIndex(const ResDicPatricia* pDic, const char* str)
+{
+    if (pDic != NULL)
+    {
+        return pDic->FindIndex_(str);
+    }
+
+    return -1;
+}
+
+int ResDicPatricia::FindIndex(const ResDicPatricia* pDic, const ResName* name)
+{
+    if (pDic != NULL)
+    {
+        return pDic->FindIndex_(name);
     }
 
     return -1;

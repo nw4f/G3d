@@ -127,7 +127,7 @@ BindResult VisibilityAnimObj::Bind(const ResModel* pModel)
     for (int idxAnim = 0, numAnim = bindTable.GetAnimCount(); idxAnim < numAnim; ++idxAnim)
     {
         const ResName* pName = pNameArray[idxAnim].GetResName();
-        int idxTarget = pDic->FindIndex(pName);
+        int idxTarget = ResDicType::FindIndex(pDic, pName);
         if (idxTarget >= 0)
         {
             bindTable.Bind(idxAnim, idxTarget);

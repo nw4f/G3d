@@ -39,14 +39,23 @@ public:
         return const_cast<void*>(ref().node[idx + 1].ofsData.to_ptr());
     }
 
-    void* Find(const char* str) const;
-    void* Find(const char* str, size_t len) const;
-    void* Find(const ResName* name) const;
+private:
+    void* Find_(const char* str) const;
+  //void* Find_(const char* str, size_t len) const;
+    void* Find_(const ResName* name) const;
 
-    int FindIndex(const char* str) const;
-    int FindIndex(const char* str, size_t len) const;
-    int FindIndex(const ResName* name) const;
+    int FindIndex_(const char* str) const;
+  //int FindIndex_(const char* str, size_t len) const;
+    int FindIndex_(const ResName* name) const;
 
+public:
+    static void* Find(const ResDicPatricia* pDic, const char* str);
+    static void* Find(const ResDicPatricia* pDic, const ResName* name);
+
+    static int FindIndex(const ResDicPatricia* pDic, const char* str);
+    static int FindIndex(const ResDicPatricia* pDic, const ResName* name);
+
+public:
     Node* FindNode(const char* str, size_t len) const;
     Node* FindNode(const ResName* name) const;
 
