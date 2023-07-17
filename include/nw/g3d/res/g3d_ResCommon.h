@@ -9,7 +9,7 @@
 namespace nw { namespace g3d { namespace res {
 
 #define NW_G3D_VALIDITY_ASSERT \
-    NW_G3D_ASSERTMSG(this, "%s::%s: Object not valid.", GetClassName(), __FUNCTION__)
+    NW_G3D_ASSERTMSG(ptr(), "%s::%s: Object not valid.", GetClassName(), __FUNCTION__)
 
 #define NW_G3D_RES_COMMON_ALIGN(class_name, alignment)                                             \
 public:                                                                                            \
