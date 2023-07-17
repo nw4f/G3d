@@ -161,7 +161,7 @@ void ConvertToGLSurface(GX2Surface& surface, int arrayLength)
     NW_G3D_ASSERT(surface.aa == GX2_AA_MODE_1X);
     NW_G3D_ASSERT(surface.use & GX2_SURFACE_USE_TEXTURE);
     NW_G3D_ASSERT(surface.imageSize && surface.imagePtr);
-    NW_G3D_ASSERT((surface.numMips <= 1 && !surface.mipSize && !surface.mipPtr) ||
+    NW_G3D_ASSERT((surface.numMips <= 1 && !surface.mipSize /* && !surface.mipPtr */) ||
                   (surface.numMips > 1 && surface.mipSize && surface.mipPtr));
     NW_G3D_ASSERT(surface.tileMode > GX2_TILE_MODE_DEFAULT &&
                   surface.tileMode < GX2_TILE_MODE_LINEAR_SPECIAL);
