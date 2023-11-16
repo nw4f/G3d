@@ -539,12 +539,12 @@ void GfxBuffer::LoadIndices() const
     {
         const_cast<GfxBuffer*>(this)->bufferType = BUFFER_TYPE_ELEMENT_ARRAY;
         const_cast<GfxBuffer*>(this)->UpdateRegs();
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size * numBuffering, GetData());
     }
     else
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle);
     }
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size * numBuffering, GetData());
     NW_G3D_GL_ASSERT();
 #endif
 }
@@ -561,12 +561,12 @@ void GfxBuffer::LoadVertices(u32 slot) const
     {
         const_cast<GfxBuffer*>(this)->bufferType = BUFFER_TYPE_ARRAY;
         const_cast<GfxBuffer*>(this)->UpdateRegs();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, size * numBuffering, GetData());
     }
     else
     {
         glBindBuffer(GL_ARRAY_BUFFER, handle);
     }
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size * numBuffering, GetData());
     NW_G3D_GL_ASSERT();
 #else
     NW_G3D_UNUSED(slot);
@@ -588,6 +588,11 @@ void GfxBuffer::LoadVertexUniforms(u32 location, int bufferIndex /*= 0*/) const
         const_cast<GfxBuffer*>(this)->bufferType = BUFFER_TYPE_UNIFORM;
         const_cast<GfxBuffer*>(this)->UpdateRegs();
         glBufferSubData(GL_UNIFORM_BUFFER, 0, size * numBuffering, GetData());
+    }
+    else
+    {
+        glBindBuffer(GL_UNIFORM_BUFFER, handle);
+        glBufferSubData(GL_UNIFORM_BUFFER, size * bufferIndex, size, GetData(bufferIndex));
     }
     NW_G3D_GL_ASSERT();
     glBindBufferRange(GL_UNIFORM_BUFFER, location, handle, size * bufferIndex, size);
