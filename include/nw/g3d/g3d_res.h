@@ -14,6 +14,5 @@
 #include <nw/g3d/res/g3d_ResTexPatternAnim.h>
 #include <nw/g3d/res/g3d_ResVisibilityAnim.h>
 #include <nw/g3d/res/g3d_ResFile.h>
-#include <nw/g3d/res/g3d_ResShader.h>
 
 #endif // NW_G3D_RES_H_
