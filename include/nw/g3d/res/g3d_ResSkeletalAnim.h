@@ -45,7 +45,7 @@ struct ResBoneAnimData
     u8 beginRotate;
     u8 beginTranslate;
     u8 numCurve;
-    u8 beginBaseTranslate;
+    u8 reserved;
     s32 beginCurve;
     Offset ofsCurveArray;
     Offset ofsBaseValueArray;

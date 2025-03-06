@@ -31,8 +31,6 @@ struct ResModelData
     u16 numMaterial;
     u16 numUserData;
 
-    u32 totalProcessVertex;
-
     BinPtr pUserPtr;
 };
 
@@ -55,8 +53,6 @@ public:
 
     NW_G3D_RES_FIELD_STRING_DECL(Name)
     NW_G3D_RES_FIELD_STRING_DECL(Path)
-
-    u32 GetTotalProcessVertex() const { return ref().totalProcessVertex; }
 
     void SetUserPtr(void* pUserPtr) { ref().pUserPtr.set_ptr(pUserPtr); }
 

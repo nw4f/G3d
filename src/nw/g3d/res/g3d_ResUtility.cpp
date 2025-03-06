@@ -153,8 +153,6 @@ void Endian<isReversed>::Swap(ResModelData* data)
     Swap(&data->numMaterial);
     Swap(&data->numUserData);
 
-    Swap(&data->totalProcessVertex);
-
     Swap(&data->pUserPtr);
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
@@ -518,7 +516,7 @@ void Endian<isReversed>::Swap(ResAnimConstantData* data)
 template<bool isReversed>
 void Endian<isReversed>::Swap(ResAnimCurveData* data)
 {
-    NW_G3D_TABLE_FIELD int typeSize[] = { 4, 2, 1, 1, 1, 1, 1 };
+    NW_G3D_TABLE_FIELD int typeSize[] = { 4, 2, 1, 1, 1, 1, 1, 1 };
     NW_G3D_TABLE_FIELD int keySize[] = { 4, 2, 1 };
 
     if (NW_G3D_STATIC_CONDITION(!isReversed))

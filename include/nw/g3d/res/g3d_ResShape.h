@@ -173,8 +173,7 @@ public:
 
 struct ResKeyShapeData
 {
-    u8 targetAttribIndices[20];
-    u8 ofsTargetAttribIndex[4];
+    u8 targetAttribIndex[4];
 };
 
 class ResKeyShape : private ResKeyShapeData
@@ -182,53 +181,9 @@ class ResKeyShape : private ResKeyShapeData
     NW_G3D_RES_COMMON(ResKeyShape);
 
 public:
-
-    enum KeyAttrib
+    int GetTargetAttribIndex(int attribIndex) const
     {
-        NUM_KEY_ATTRIB_POSITION = 1,
-        NUM_KEY_ATTRIB_NORMAL = 1,
-        NUM_KEY_ATTRIB_TANGENT = 4,
-        NUM_KEY_ATTRIB_BINORMAL = 4,
-        NUM_KEY_ATTRIB_COLOR = 8,
-
-        KEY_ATTRIB_POSITION_OFFSET = 0,
-        KEY_ATTRIB_NORMAL_OFFSET = KEY_ATTRIB_POSITION_OFFSET + NUM_KEY_ATTRIB_POSITION,
-        KEY_ATTRIB_TANGENT_OFFSET = KEY_ATTRIB_NORMAL_OFFSET + NUM_KEY_ATTRIB_NORMAL,
-        KEY_ATTRIB_BINORMAL_OFFSET = KEY_ATTRIB_TANGENT_OFFSET + NUM_KEY_ATTRIB_TANGENT,
-        KEY_ATTRIB_COLOR_OFFSET = KEY_ATTRIB_BINORMAL_OFFSET + NUM_KEY_ATTRIB_BINORMAL
-    };
-
-    int GetPositionAttribIndex() const
-    {
-        return ref().targetAttribIndices[KEY_ATTRIB_POSITION_OFFSET] - 1;
-    }
-
-    int GetNormalAttribIndex() const
-    {
-        return ref().targetAttribIndices[KEY_ATTRIB_NORMAL_OFFSET] - 1;
-    }
-
-    int GetTangentAttribIndex(int index = 0) const
-    {
-        NW_G3D_ASSERT_INDEX_BOUNDS(index, NUM_KEY_ATTRIB_TANGENT);
-        return ref().targetAttribIndices[KEY_ATTRIB_TANGENT_OFFSET + index] - 1;
-    }
-
-    int GetBinormalAttribIndex(int index = 0) const
-    {
-        NW_G3D_ASSERT_INDEX_BOUNDS(index, NUM_KEY_ATTRIB_BINORMAL);
-        return ref().targetAttribIndices[KEY_ATTRIB_BINORMAL_OFFSET + index] - 1;
-    }
-
-    int GetColorAttribIndex(int index = 0) const
-    {
-        NW_G3D_ASSERT_INDEX_BOUNDS(index, NUM_KEY_ATTRIB_COLOR);
-        return ref().targetAttribIndices[KEY_ATTRIB_COLOR_OFFSET + index] - 1;
-    }
-
-    NW_G3D_DEPRECATED_FUNCTION(int GetTargetAttribIndex(int attribIndex) const)
-    {
-        return ref().ofsTargetAttribIndex[attribIndex] - 1;
+        return ref().targetAttribIndex[attribIndex];
     }
 };
 
