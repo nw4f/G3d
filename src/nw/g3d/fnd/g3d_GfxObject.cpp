@@ -750,39 +750,45 @@ void GfxSampler::UpdateRegs()
 #endif
 }
 
-void GfxSampler::LoadVertexSampler(u32 unit) const
+void GfxSampler::LoadVertexSampler(u32 location, u32 unit) const
 {
 #if NW_G3D_IS_GX2
-    GX2SetVertexSampler(GetGX2Sampler(), unit);
+    NW_G3D_UNUSED(unit);
+    GX2SetVertexSampler(GetGX2Sampler(), location);
 #elif NW_G3D_IS_GL && !defined( NW_STRIP_GL )
     NW_G3D_ASSERT(handle != 0);
     glBindSampler(unit, handle);
     NW_G3D_GL_ASSERT();
-    glUniform1i(unit, unit);
+    glUniform1i(location, unit);
     NW_G3D_GL_ASSERT();
 #else
+    NW_G3D_UNUSED(location);
     NW_G3D_UNUSED(unit);
 #endif
 }
 
-void GfxSampler::LoadGeometrySampler(u32 unit) const
+void GfxSampler::LoadGeometrySampler(u32 location, u32 unit) const
 {
 #if NW_G3D_IS_GX2
-    GX2SetGeometrySampler(GetGX2Sampler(), unit);
+    NW_G3D_UNUSED(unit);
+    GX2SetGeometrySampler(GetGX2Sampler(), location);
 #elif NW_G3D_IS_GL && !defined( NW_STRIP_GL )
-    LoadVertexSampler(unit);
+    LoadVertexSampler(location, unit);
 #else
+    NW_G3D_UNUSED(location);
     NW_G3D_UNUSED(unit);
 #endif
 }
 
-void GfxSampler::LoadFragmentSampler(u32 unit) const
+void GfxSampler::LoadFragmentSampler(u32 location, u32 unit) const
 {
 #if NW_G3D_IS_GX2
-    GX2SetPixelSampler(GetGX2Sampler(), unit);
+    NW_G3D_UNUSED(unit);
+    GX2SetPixelSampler(GetGX2Sampler(), location);
 #elif NW_G3D_IS_GL && !defined( NW_STRIP_GL )
-    LoadVertexSampler(unit);
+    LoadVertexSampler(location, unit);
 #else
+    NW_G3D_UNUSED(location);
     NW_G3D_UNUSED(unit);
 #endif
 }
@@ -1009,11 +1015,13 @@ const void* GfxTexture::GetImagePtr(int mipLevel) const
 #endif
 }
 
-void GfxTexture::LoadVertexTexture(u32 unit) const
+void GfxTexture::LoadVertexTexture(u32 location, u32 unit) const
 {
 #if NW_G3D_IS_GX2
-    GX2SetVertexTexture(GetGX2Texture(), unit);
+    NW_G3D_UNUSED(unit);
+    GX2SetVertexTexture(GetGX2Texture(), location);
 #elif NW_G3D_IS_GL && !defined( NW_STRIP_GL )
+    NW_G3D_UNUSED(location);
     NW_G3D_ASSERT(handle != 0);
 
     NW_G3D_TABLE_FIELD u32 tblDimension[] = {
@@ -1037,28 +1045,33 @@ void GfxTexture::LoadVertexTexture(u32 unit) const
 
     NW_G3D_GL_ASSERT();
 #else
+    NW_G3D_UNUSED(location);
     NW_G3D_UNUSED(unit);
 #endif
 }
 
-void GfxTexture::LoadGeometryTexture(u32 unit) const
+void GfxTexture::LoadGeometryTexture(u32 location, u32 unit) const
 {
 #if NW_G3D_IS_GX2
-    GX2SetGeometryTexture(GetGX2Texture(), unit);
+    NW_G3D_UNUSED(unit);
+    GX2SetGeometryTexture(GetGX2Texture(), location);
 #elif NW_G3D_IS_GL && !defined( NW_STRIP_GL )
-    LoadVertexTexture(unit);
+    LoadVertexTexture(location, unit);
 #else
+    NW_G3D_UNUSED(location);
     NW_G3D_UNUSED(unit);
 #endif
 }
 
-void GfxTexture::LoadFragmentTexture(u32 unit) const
+void GfxTexture::LoadFragmentTexture(u32 location, u32 unit) const
 {
 #if NW_G3D_IS_GX2
-    GX2SetPixelTexture(GetGX2Texture(), unit);
+    NW_G3D_UNUSED(unit);
+    GX2SetPixelTexture(GetGX2Texture(), location);
 #elif NW_G3D_IS_GL && !defined( NW_STRIP_GL )
-    LoadVertexTexture(unit);
+    LoadVertexTexture(location, unit);
 #else
+    NW_G3D_UNUSED(location);
     NW_G3D_UNUSED(unit);
 #endif
 }

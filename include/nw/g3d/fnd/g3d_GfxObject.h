@@ -119,10 +119,10 @@ public:
     void Cleanup();
     void UpdateRegs();
 
-    void LoadVertexSampler(u32 unit) const;
-    void LoadGeometrySampler(u32 unit) const;
-    void LoadFragmentSampler(u32 unit) const;
-    // void LoadComputeSampler(u32 unit) const;
+    void LoadVertexSampler(u32 location, u32 unit) const;
+    void LoadGeometrySampler(u32 location, u32 unit) const;
+    void LoadFragmentSampler(u32 location, u32 unit) const;
+    // void LoadComputeSampler(u32 location, u32 unit) const;
 
     GX2Sampler* GetGX2Sampler()
     {
@@ -200,10 +200,10 @@ public:
     void DCFlush() const;
     // void DCRefresh();
 
-    void LoadVertexTexture(u32 unit) const;
-    void LoadGeometryTexture(u32 unit) const;
-    void LoadFragmentTexture(u32 unit) const;
-    // void LoadComputeTexture(u32 unit) const;
+    void LoadVertexTexture(u32 location, u32 unit) const;
+    void LoadGeometryTexture(u32 location, u32 unit) const;
+    void LoadFragmentTexture(u32 location, u32 unit) const;
+    // void LoadComputeTexture(u32 location, u32 unit) const;
 
     GX2Texture* GetGX2Texture()
     {
