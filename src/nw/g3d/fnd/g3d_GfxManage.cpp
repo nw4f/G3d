@@ -1,6 +1,5 @@
 ﻿#include <nw/g3d/fnd/g3d_GfxManage.h>
 
-#include <chrono>
 #include <nw/g3d/ut/g3d_Inlines.h>
 #include <nw/g3d/fnd/g3d_GfxState.h>
 #include <nw/g3d/fnd/g3d_GfxObject.h>
@@ -32,7 +31,8 @@ void CPUClock::Freq::Init()
 #if NW_G3D_IS_GX2
     m_Value = OS_TIMER_CLOCK;
 #elif NW_G3D_IS_GL && !defined( NW_STRIP_GL )
-    m_Value = std::chrono::high_resolution_clock::period::den / std::chrono::high_resolution_clock::period::num;
+    [[maybe_unused]] BOOL success = QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&m_Value));
+    NW_G3D_ASSERT(success);
 #endif
 }
 
