@@ -1,16 +1,18 @@
 ﻿#include <nw/g3d/fnd/g3d_GfxManage.h>
 
-#include <algorithm>
+#include <chrono>
 #include <nw/g3d/ut/g3d_Inlines.h>
 #include <nw/g3d/fnd/g3d_GfxState.h>
 #include <nw/g3d/fnd/g3d_GfxObject.h>
 
 #if NW_G3D_IS_HOST_WIN
+#if defined (_WIN32)
     #define WIN32_LEAN_AND_MEAN
     #ifndef NOMINMAX
         #define NOMINMAX
     #endif // NOMINMAX
     #include <windows.h>
+#endif
 #elif NW_G3D_IS_HOST_CAFE
     #include <cafe/os/OSTime.h>
 #endif
@@ -30,8 +32,7 @@ void CPUClock::Freq::Init()
 #if NW_G3D_IS_GX2
     m_Value = OS_TIMER_CLOCK;
 #elif NW_G3D_IS_GL && !defined( NW_STRIP_GL )
-    [[maybe_unused]] BOOL success = QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&m_Value));
-    NW_G3D_ASSERT(success);
+    m_Value = std::chrono::high_resolution_clock::period::den / std::chrono::high_resolution_clock::period::num;
 #endif
 }
 

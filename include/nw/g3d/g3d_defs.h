@@ -12,7 +12,7 @@
 #define NW_G3D_CAFE_WIN                 ( 0x5 )
 
 #if !defined( NW_G3D_PLATFORM )
-    #if defined( _WIN32 )
+    #if defined( _WIN32 ) || defined(__linux__)
         #define NW_G3D_PLATFORM         ( NW_G3D_CAFE_WIN )
     #else
         #define NW_G3D_PLATFORM         ( NW_G3D_CAFE_CAFE )
