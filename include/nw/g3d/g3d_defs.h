@@ -48,11 +48,15 @@
 #define NW_G3D_TARGET_PTRSIZE           ( 1 << NW_G3D_TARGET_ARCH )
 #define NW_G3D_TARGET_DEFAULT_ALIGNMENT ( NW_G3D_TARGET_PTRSIZE )
 
-#if defined( _WIN64 )
+#include <stdint.h>
+
+#if INTPTR_MAX == INT64_MAX
   //#define NW_G3D_HOST_ARCH            ( NW_G3D_64BIT )
-    #error "Win64 is not supported"
-#else
+    #error "64-bit architecture is not supported"
+#elif INTPTR_MAX == INT32_MAX
     #define NW_G3D_HOST_ARCH            ( NW_G3D_32BIT )
+#else
+    #error "Unknown pointer size"
 #endif
 
 #define NW_G3D_HOST_PTRSIZE             ( 1 << NW_G3D_HOST_ARCH )
@@ -189,5 +193,7 @@ typedef unsigned int uint;
 #else
 typedef wchar_t char16;
 #endif
+
+static_assert(sizeof(size_t) == sizeof(void*) && sizeof(void*) == sizeof(u32) && sizeof(u32) == 4);
 
 #endif // NW_G3D_DEFS_H_
