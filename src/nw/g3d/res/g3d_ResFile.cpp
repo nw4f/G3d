@@ -110,16 +110,16 @@ ResFile* ResFile::ResCast(void* ptr)
 
                 if (mipData)
                 {
-                    NW_G3D_ASSERT(mipData == surface.mipPtr);
+                    NW_G3D_ASSERT(mipData == surface.mipPtr.get());
                 }
 
                 ConvertToGLSurface(surface, pGfxTex->arrayLength);
 
-                if (mipData && mipData != surface.mipPtr)
+                if (mipData && mipData != surface.mipPtr.get())
                 {
                     ResTextureData& pResTexData = pResTex->ref();
-                    pResTexData.ofsMipData = s32(pResTexData.ofsMipData) - ((uintptr_t)mipData - (uintptr_t)surface.mipPtr);
-                    NW_G3D_ASSERT(pResTex->GetMipData() == surface.mipPtr);
+                    pResTexData.ofsMipData = s32(pResTexData.ofsMipData) - ((uintptr_t)mipData - (uintptr_t)surface.mipPtr.get());
+                    NW_G3D_ASSERT(pResTex->GetMipData() == surface.mipPtr.get());
                 }
 
                 pGfxTex->SetImagePtrs(NULL, NULL);

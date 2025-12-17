@@ -17,6 +17,8 @@
 #include <nw/g3d/res/g3d_ResShapeAnim.h>
 #include <nw/g3d/res/g3d_ResSceneAnim.h>
 
+#include <SerializedPtr.hpp>
+
 namespace nw { namespace g3d { namespace res {
 
 class BindCallback;
@@ -55,7 +57,7 @@ struct ResFileData
     u16 numSceneAnim;
     u16 numExternalFile;
 
-    BinPtr pUserPtr;
+    SerializedPtr<void> pUserPtr;
 };
 
 class ResFile : private ResFileData
@@ -91,16 +93,16 @@ public:
 
     NW_G3D_RES_FIELD_STRING_DECL(Name)
 
-    void SetUserPtr(void* pUserPtr) { ref().pUserPtr.set_ptr(pUserPtr); }
+    void SetUserPtr(void* pUserPtr) { ref().pUserPtr.set(pUserPtr); }
 
-    void* GetUserPtr() { return ref().pUserPtr.to_ptr(); }
-    const void* GetUserPtr() const { return ref().pUserPtr.to_ptr(); }
-
-    template <typename T>
-    T* GetUserPtr() { return ref().pUserPtr.to_ptr<T>(); }
+    void* GetUserPtr() { return ref().pUserPtr.get(); }
+    const void* GetUserPtr() const { return ref().pUserPtr.get(); }
 
     template <typename T>
-    const T* GetUserPtr() const { return ref().pUserPtr.to_ptr<T>(); }
+    T* GetUserPtr() { return static_cast<T*>(ref().pUserPtr.get()); }
+
+    template <typename T>
+    const T* GetUserPtr() const { return static_cast<const T*>(ref().pUserPtr.get()); }
 
     NW_G3D_RES_FIELD_DIC_DECL(ResModel, Model)
 

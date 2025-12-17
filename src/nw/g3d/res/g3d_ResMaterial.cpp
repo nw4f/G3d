@@ -128,8 +128,7 @@ void ConvertTexSrtExMaya(void* pDst, const void* pSrc)
     const float ty = -0.5f * (sycr - sysr + srt.sy) + srt.ty * srt.sy + 1.0f;
 
     Mtx34 mtx;
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-    const Mtx34* pEffectMtx = srtEx.pEffectMtx;
+    const Mtx34* pEffectMtx = srtEx.pEffectMtx.get();
     if (pEffectMtx)
     {
         mtx.m00 =  sxcr * pEffectMtx->m00 + sxsr * pEffectMtx->m10 + tx * pEffectMtx->m20;
@@ -144,7 +143,6 @@ void ConvertTexSrtExMaya(void* pDst, const void* pSrc)
         memcpy(mtx.m[2], pEffectMtx->m[2], NUM_COMP_MTX14 << 2);
     }
     else
-#endif
     {
         mtx.m00 =  sxcr;
         mtx.m10 = -sysr;
@@ -174,8 +172,7 @@ void ConvertTexSrtEx3dsmax(void* pDst, const void* pSrc)
     const float ty =  sysr * (srt.tx + 0.5f) + sycr * (srt.ty - 0.5f) + 0.5f;
 
     Mtx34 mtx;
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-    const Mtx34* pEffectMtx = srtEx.pEffectMtx;
+    const Mtx34* pEffectMtx = srtEx.pEffectMtx.get();
     if (pEffectMtx)
     {
         mtx.m00 =  sxcr * pEffectMtx->m00 + sxsr * pEffectMtx->m10 + tx * pEffectMtx->m20;
@@ -190,7 +187,6 @@ void ConvertTexSrtEx3dsmax(void* pDst, const void* pSrc)
         memcpy(mtx.m[2], pEffectMtx->m[2], NUM_COMP_MTX14 << 2);
     }
     else
-#endif
     {
         mtx.m00 =  sxcr;
         mtx.m10 = -sysr;
@@ -220,8 +216,7 @@ void ConvertTexSrtExSoftimage(void* pDst, const void* pSrc)
     const float ty = -sycr - sysr * srt.tx + sycr * srt.ty + 1.0f;
 
     Mtx34 mtx;
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-    const Mtx34* pEffectMtx = srtEx.pEffectMtx;
+    const Mtx34* pEffectMtx = srtEx.pEffectMtx.get();
     if (pEffectMtx)
     {
         mtx.m00 = sxcr * pEffectMtx->m00 - sxsr * pEffectMtx->m10 + tx * pEffectMtx->m20;
@@ -236,7 +231,6 @@ void ConvertTexSrtExSoftimage(void* pDst, const void* pSrc)
         memcpy(mtx.m[2], pEffectMtx->m[2], NUM_COMP_MTX14 << 2);
     }
     else
-#endif
     {
         mtx.m00 =  sxcr;
         mtx.m10 =  sysr;

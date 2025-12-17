@@ -7,6 +7,8 @@
 #include <nw/g3d/res/g3d_ResCommon.h>
 #include <nw/g3d/res/g3d_ResDictionary.h>
 
+#include <SerializedPtr.hpp>
+
 namespace nw { namespace g3d { namespace res {
 
 class ResFile;
@@ -82,7 +84,7 @@ struct ResVertexData
     Offset ofsVtxAttribDic;
     Offset ofsVtxBufferArray;
 
-    BinPtr pUserPtr;
+    SerializedPtr<void> pUserPtr;
 };
 
 class ResVertex : private ResVertexData
@@ -102,17 +104,17 @@ public:
 
     int GetVtxSkinCount() const { return ref().vtxSkinCount; }
 
-    void SetUserPtr(void* pUserPtr) { ref().pUserPtr.set_ptr(pUserPtr); }
+    void SetUserPtr(void* pUserPtr) { ref().pUserPtr.set(pUserPtr); }
 
-    void* GetUserPtr() { return ref().pUserPtr.to_ptr(); }
+    void* GetUserPtr() { return ref().pUserPtr.get(); }
 
-    const void* GetUserPtr() const { return ref().pUserPtr.to_ptr(); }
-
-    template <typename T>
-    T* GetUserPtr() { return ref().pUserPtr.to_ptr<T>(); }
+    const void* GetUserPtr() const { return ref().pUserPtr.get(); }
 
     template <typename T>
-    const T* GetUserPtr() const { return ref().pUserPtr.to_ptr<T>(); }
+    T* GetUserPtr() { return static_cast<T*>(ref().pUserPtr.get()); }
+
+    template <typename T>
+    const T* GetUserPtr() const { return static_cast<const T*>(ref().pUserPtr.get()); }
 
     NW_G3D_RES_FIELD_CLASS_NAMED_ARRAY_DECL(ResVtxAttrib, VtxAttrib)
 
@@ -230,7 +232,7 @@ struct ResShapeData
     Offset ofsSubBoundingArray;
     Offset ofsSubMeshIndexArray;
 
-    BinPtr pUserPtr;
+    SerializedPtr<void> pUserPtr;
 };
 
 class ResShape : private ResShapeData
@@ -273,17 +275,17 @@ public:
 
     bool IsSmoothSkinning() const { return ref().vtxSkinCount > 1; }
 
-    void SetUserPtr(void* pUserPtr) { ref().pUserPtr.set_ptr(pUserPtr); }
+    void SetUserPtr(void* pUserPtr) { ref().pUserPtr.set(pUserPtr); }
 
-    void* GetUserPtr() { return ref().pUserPtr.to_ptr(); }
+    void* GetUserPtr() { return ref().pUserPtr.get(); }
 
-    const void* GetUserPtr() const { return ref().pUserPtr.to_ptr(); }
-
-    template <typename T>
-    T* GetUserPtr() { return ref().pUserPtr.to_ptr<T>(); }
+    const void* GetUserPtr() const { return ref().pUserPtr.get(); }
 
     template <typename T>
-    const T* GetUserPtr() const { return ref().pUserPtr.to_ptr<T>(); }
+    T* GetUserPtr() { return static_cast<T*>(ref().pUserPtr.get()); }
+
+    template <typename T>
+    const T* GetUserPtr() const { return static_cast<const T*>(ref().pUserPtr.get()); }
 
     NW_G3D_RES_FIELD_CLASS_DECL(ResVertex, Vertex);
 

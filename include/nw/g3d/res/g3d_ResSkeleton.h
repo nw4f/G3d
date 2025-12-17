@@ -9,6 +9,8 @@
 #include <nw/g3d/res/g3d_ResDictionary.h>
 #include <nw/g3d/res/g3d_ResUserData.h>
 
+#include <SerializedPtr.hpp>
+
 namespace nw { namespace g3d {namespace res {
 
 class ResFile;
@@ -155,7 +157,7 @@ struct ResSkeletonData
     Offset ofsBoneArray;
     Offset ofsMtxToBoneTable;
 
-    BinPtr pUserPtr;
+    SerializedPtr<void> pUserPtr;
 };
 
 class ResSkeleton : private ResSkeletonData
@@ -194,17 +196,17 @@ public:
 
     int GetBranchEndIndex(int boneIndex) const;
 
-    void SetUserPtr(void* pUserPtr) { ref().pUserPtr.set_ptr(pUserPtr); }
+    void SetUserPtr(void* pUserPtr) { ref().pUserPtr.set(pUserPtr); }
 
-    void* GetUserPtr() { return ref().pUserPtr.to_ptr(); }
+    void* GetUserPtr() { return ref().pUserPtr.get(); }
 
-    const void* GetUserPtr() const { return ref().pUserPtr.to_ptr(); }
-
-    template <typename T>
-    T* GetUserPtr() { return ref().pUserPtr.to_ptr<T>(); }
+    const void* GetUserPtr() const { return ref().pUserPtr.get(); }
 
     template <typename T>
-    const T* GetUserPtr() const { return ref().pUserPtr.to_ptr<T>(); }
+    T* GetUserPtr() { return static_cast<T*>(ref().pUserPtr.get()); }
+
+    template <typename T>
+    const T* GetUserPtr() const { return static_cast<const T*>(ref().pUserPtr.get()); }
 
     void UpdateBillboardMode();
 

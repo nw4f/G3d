@@ -160,9 +160,9 @@ void ConvertToGLSurface(GX2Surface& surface, int arrayLength)
     NW_G3D_ASSERT(surface.depth == 1);
     NW_G3D_ASSERT(surface.aa == GX2_AA_MODE_1X);
     NW_G3D_ASSERT(surface.use & GX2_SURFACE_USE_TEXTURE);
-    NW_G3D_ASSERT(surface.imageSize && surface.imagePtr);
-    NW_G3D_ASSERT((surface.numMips <= 1 && !surface.mipSize /* && !surface.mipPtr */) ||
-                  (surface.numMips > 1 && surface.mipSize && surface.mipPtr));
+    NW_G3D_ASSERT(surface.imageSize && surface.imagePtr.get());
+    NW_G3D_ASSERT((surface.numMips <= 1 && !surface.mipSize /* && !surface.mipPtr.get() */) ||
+                  (surface.numMips > 1 && surface.mipSize && surface.mipPtr.get()));
     NW_G3D_ASSERT(surface.tileMode > GX2_TILE_MODE_DEFAULT &&
                   surface.tileMode < GX2_TILE_MODE_LINEAR_SPECIAL);
 
@@ -196,13 +196,13 @@ void ConvertToGLSurface(GX2Surface& surface, int arrayLength)
         imageSize += linear.mipSize;
     }
 
-    linear.imagePtr = std::malloc(imageSize);
-    NW_G3D_ASSERT(linear.imagePtr);
+    linear.imagePtr.set(std::malloc(imageSize));
+    NW_G3D_ASSERT(linear.imagePtr.get());
 
     if (linear.numMips > 1)
-        linear.mipPtr = (void*)((uintptr_t)linear.imagePtr + linear.mipOffset[0]);
+        linear.mipPtr.set((void*)((uintptr_t)linear.imagePtr.get() + linear.mipOffset[0]));
     else
-        linear.mipPtr = NULL;
+        linear.mipPtr.set(NULL);
 
     for (u32 mipLevel = 2; mipLevel < surface.numMips; ++mipLevel)
         NW_G3D_ASSERT(linear.mipOffset[mipLevel - 1] < linear.mipSize);
@@ -212,27 +212,27 @@ void ConvertToGLSurface(GX2Surface& surface, int arrayLength)
         GX2CopySurface(&surface, mipLevel, 0, &linear, mipLevel, 0);
 
     bool relative = (surface.numMips > 1) &&
-                    (((uintptr_t)surface.mipPtr - (uintptr_t)surface.imagePtr) == surface.mipOffset[0]);
+                    (((uintptr_t)surface.mipPtr.get() - (uintptr_t)surface.imagePtr.get()) == surface.mipOffset[0]);
 
     surface.tileMode = GX2_TILE_MODE_LINEAR_SPECIAL;
     surface.swizzle = 0;
     GX2CalcSurfaceSizeAndAlignment(&surface);
 
-    std::memcpy(surface.imagePtr, linear.imagePtr, linear.imageSize);
+    std::memcpy(surface.imagePtr.get(), linear.imagePtr.get(), linear.imageSize);
 
     if (surface.numMips > 1)
     {
         // NW_G3D_ASSERT(relative);
         if (relative)
-            surface.mipPtr = (void*)((uintptr_t)surface.imagePtr + surface.mipOffset[0]);
+            surface.mipPtr.set((void*)((uintptr_t)surface.imagePtr.get() + surface.mipOffset[0]));
 
-        std::memcpy(surface.mipPtr, linear.mipPtr, linear.mipSize);
+        std::memcpy(surface.mipPtr.get(), linear.mipPtr.get(), linear.mipSize);
     }
 
-    std::free(linear.imagePtr);
+    std::free(linear.imagePtr.get());
 
-    linear.imagePtr = NULL;
-    linear.mipPtr = NULL;
+    linear.imagePtr.set(NULL);
+    linear.mipPtr.set(NULL);
 }
 
 u32 CalcImageSize(GX2SurfaceFormat format, u32 width, u32 height, u32 depth)
@@ -266,16 +266,10 @@ bool IsCompressed(GX2SurfaceFormat format)
 
 const void* GetImagePtr(const GX2Surface& surface, u32 mipLevel)
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
     return
-        mipLevel == 0 ? surface.imagePtr :
-        mipLevel == 1 ? surface.mipPtr :
-        surface.mipPtr ? AddOffset(surface.mipPtr, surface.mipOffset[mipLevel - 1]) : NULL;
-#else
-    NW_G3D_UNUSED(surface);
-    NW_G3D_UNUSED(mipLevel);
-    return NULL;
-#endif
+        mipLevel == 0 ? surface.imagePtr.get() :
+        mipLevel == 1 ? surface.mipPtr.get() :
+        surface.mipPtr.get() ? AddOffset(surface.mipPtr.get(), surface.mipOffset[mipLevel - 1]) : NULL;
 }
 
 } } } // namespace nw::g3d::fnd

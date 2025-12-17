@@ -52,7 +52,7 @@ bool MaterialObj::Init(const InitArg& arg, void* pBuffer, size_t bufferSize)
 
     m_pDirtyFlagArray = sizer.GetPtr<u32>(ptr, Sizer::DIRTY_FLAG_ARRAY);
 
-    memset(static_cast<GfxBuffer_t*>(&m_MatBlock), 0, sizeof(GfxBuffer_t));
+    m_MatBlock.Clear();
     m_pSrcParam = sizer.GetPtr(ptr, Sizer::SRC_PARAM_ARRAY);
     memcpy(m_pSrcParam, pRes->ref().ofsSrcParam.to_ptr(), pRes->GetSrcParamSize());
     m_ppTextureArray = sizer.GetPtr<ResTexture*>(ptr, Sizer::TEXTURE_ARRAY);

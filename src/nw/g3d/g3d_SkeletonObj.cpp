@@ -92,7 +92,7 @@ bool SkeletonObj::Init(const InitArg& arg, void* pBuffer, size_t bufferSize)
     m_pUserPtr = NULL;
     m_pBufferPtr = pBuffer;
     m_pBlockBuffer = NULL;
-    memset(static_cast<GfxBuffer_t*>(&m_MtxBlock), 0, sizeof(GfxBuffer_t));
+    m_MtxBlock.Clear();
 
     ClearLocalMtx();
 
@@ -124,7 +124,7 @@ bool SkeletonObj::SetupBlockBuffer(void* pBuffer, size_t bufferSize)
     m_MtxBlock.SetData(pBuffer, size / m_NumBuffering, m_NumBuffering);
     m_MtxBlock.Setup();
 #if NW_G3D_IS_HOST_CAFE
-    DCInvalidateRange((m_pLCMtxBlock = m_MtxBlock.pData), size);
+    DCInvalidateRange((m_pLCMtxBlock = m_MtxBlock.pData.get()), size);
 #endif
 
     m_Flag |= BLOCK_BUFFER_VALID;
@@ -235,7 +235,7 @@ void SkeletonObj::CalcMtxBlock(int bufferIndex /*= 0*/)
 
     int idxMtx = 0;
     Mtx34* pMtxArray = NULL;
-    if (block.pData == m_pLCMtxBlock)
+    if (block.pData.get() == m_pLCMtxBlock)
     {
         pMtxArray = static_cast<Mtx34*>(block.GetData(bufferIndex));
 #if NW_G3D_IS_HOST_CAFE
@@ -248,7 +248,7 @@ void SkeletonObj::CalcMtxBlock(int bufferIndex /*= 0*/)
     }
     else
     {
-        pMtxArray = static_cast<Mtx34*>(block.pData);
+        pMtxArray = static_cast<Mtx34*>(block.pData.get());
     }
 
     if (IsBlockSwapEnabled())
@@ -290,7 +290,7 @@ void SkeletonObj::CalcMtxBlock(int bufferIndex /*= 0*/)
         }
     }
 
-    if (block.pData == m_pLCMtxBlock)
+    if (block.pData.get() == m_pLCMtxBlock)
     {
         block.DCFlush(bufferIndex);
     }

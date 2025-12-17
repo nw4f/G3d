@@ -436,7 +436,7 @@ enum
 
 GfxBuffer::GfxBuffer()
 {
-    memset(static_cast<GfxBuffer_t*>(this), 0, sizeof(GfxBuffer_t));
+    Clear();
 #if NW_G3D_IS_GL && !defined( NW_STRIP_GL )
     handle = 0;
     bufferType = BUFFER_TYPE_INVALID;
@@ -635,38 +635,22 @@ void GfxBuffer::LoadFragmentUniforms(u32 location, int bufferIndex /*= 0*/) cons
 
 void GfxBuffer::SetData(void* pData, u32 size, int bufferingCount /*= 1*/)
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
     NW_G3D_ASSERT(bufferingCount > 0);
-    this->pData = size > 0 ? pData : NULL;
+    this->pData.set(size > 0 ? pData : NULL);
     this->size = size;
     this->numBuffering = static_cast<u16>(bufferingCount);
-#else
-    NW_G3D_UNUSED(pData);
-    NW_G3D_UNUSED(size);
-    NW_G3D_UNUSED(bufferingCount);
-#endif
 }
 
 void* GfxBuffer::GetData(int bufferIndex /*= 0*/)
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
     NW_G3D_ASSERT_INDEX_BOUNDS( bufferIndex, numBuffering );
-    return AddOffset(pData, size * bufferIndex);
-#else
-    NW_G3D_UNUSED(bufferIndex);
-    return NULL;
-#endif
+    return AddOffset(pData.get(), size * bufferIndex);
 }
 
 const void* GfxBuffer::GetData(int bufferIndex /*= 0*/) const
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
     NW_G3D_ASSERT_INDEX_BOUNDS( bufferIndex, numBuffering );
-    return AddOffset(pData, size * bufferIndex);
-#else
-    NW_G3D_UNUSED(bufferIndex);
-    return NULL;
-#endif
+    return AddOffset(pData.get(), size * bufferIndex);
 }
 void GfxSampler::Setup()
 {
@@ -971,48 +955,28 @@ void GfxTexture::DCFlush() const
 
 void GfxTexture::SetImagePtrs(void* basePtr, void* mipPtr)
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
     GX2Texture* pTexture = GetGX2Texture();
-    pTexture->surface.imagePtr = basePtr;
+    pTexture->surface.imagePtr.set(basePtr);
     if (pTexture->surface.numMips > 1 && mipPtr == NULL && basePtr) {
-        pTexture->surface.mipPtr = AddOffset(basePtr, pTexture->surface.mipOffset[0]);
+        pTexture->surface.mipPtr.set(AddOffset(basePtr, pTexture->surface.mipOffset[0]));
     } else {
-        pTexture->surface.mipPtr = mipPtr;
+        pTexture->surface.mipPtr.set(mipPtr);
     }
-#else
-    NW_G3D_UNUSED(basePtr);
-    NW_G3D_UNUSED(mipPtr);
-    gx2Texture.surface.imagePtr = 0;
-    gx2Texture.surface.mipPtr = 0;
-#endif
 }
 
 const void* GfxTexture::GetBasePtr() const
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-    return GetGX2Texture()->surface.imagePtr;
-#else
-    return NULL;
-#endif
+    return GetGX2Texture()->surface.imagePtr.get();
 }
 
 const void* GfxTexture::GetMipPtr() const
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-    return GetGX2Texture()->surface.mipPtr;
-#else
-    return NULL;
-#endif
+    return GetGX2Texture()->surface.mipPtr.get();
 }
 
 const void* GfxTexture::GetImagePtr(int mipLevel) const
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
     return fnd::GetImagePtr(GetGX2Texture()->surface, mipLevel);
-#else
-    NW_G3D_UNUSED(mipLevel);
-    return NULL;
-#endif
 }
 
 void GfxTexture::LoadVertexTexture(u32 location, u32 unit) const
@@ -1158,44 +1122,31 @@ void GfxFetchShader::Load() const
 void GfxFetchShader::SetVertexBuffer(int attribIndex, const GfxBuffer* pBuffer)
 {
     u32* pVFetchInst = GetVFInst(attribIndex);
-    pVFetchInst[3] = reinterpret_cast<u32>(pBuffer);
+    reinterpret_cast<SerializedPtr<const GfxBuffer>*>(pVFetchInst + 3)->set(pBuffer);
 }
 
 const GfxBuffer* GfxFetchShader::GetVertexBuffer(int attribIndex) const
 {
     const u32* pVFetchInst = GetVFInst(attribIndex);
-    return reinterpret_cast<const GfxBuffer*>(pVFetchInst[3]);
+    return reinterpret_cast<const SerializedPtr<const GfxBuffer>*>(pVFetchInst + 3)->get();
 }
 
 void GfxFetchShader::SetShaderPtr(void* ptr)
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
 #if NW_G3D_IS_HOST_CAFE
     NW_G3D_ASSERT_ADDR_ALIGNMENT(ptr, SHADER_ALIGNMENT);
 #endif // NW_G3D_IS_HOST_CAFE
-    GetGX2FetchShader()->shaderPtr = ptr;
-#else
-    NW_G3D_UNUSED(ptr);
-    gx2FetchShader.shaderPtr = 0;
-#endif
+    GetGX2FetchShader()->shaderPtr.set(ptr);
 }
 
 void* GfxFetchShader::GetShaderPtr()
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-    return GetGX2FetchShader()->shaderPtr;
-#else
-    return NULL;
-#endif
+    return GetGX2FetchShader()->shaderPtr.get();
 }
 
 const void* GfxFetchShader::GetShaderPtr() const
 {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-    return GetGX2FetchShader()->shaderPtr;
-#else
-    return NULL;
-#endif
+    return GetGX2FetchShader()->shaderPtr.get();
 }
 
 void GfxFetchShader::SetDefault(void* pShader)
@@ -1419,7 +1370,7 @@ void GfxFetchShader::LoadVertexAttribValue() const
                 glDisableVertexAttribArray(location);
                 NW_G3D_GL_ASSERT();
 
-                const u32* pVFetchInst = GetVFInst(GetGX2FetchShader()->shaderPtr, idxAttrib);
+                const u32* pVFetchInst = GetVFInst(idxAttrib);
                 u32 inst2 = ReadInst(pVFetchInst, 2);
 
                 u8 endianSwap = NW_G3D_GET_FLAG_VALUE(inst2, ENDIAN_SWAP, u8);
@@ -1436,13 +1387,13 @@ void GfxFetchShader::LoadVertexAttribValue() const
                     if (fmtType == ATTRIB_FMT_SCALED)
                     {
                         float vertices[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-                        memcpy(vertices, pBuffer->pData, sizeof(u32) * cmpCount);
+                        memcpy(vertices, pBuffer->pData.get(), sizeof(u32) * cmpCount);
                         glVertexAttrib4fv(location, vertices);
                     }
                     else
                     {
                         u32 vertices[4] = { 0, 0, 0, 1 };
-                        memcpy(vertices, pBuffer->pData, sizeof(u32) * cmpCount);
+                        memcpy(vertices, pBuffer->pData.get(), sizeof(u32) * cmpCount);
                         if (signedType)
                         {
                             glVertexAttrib4iv(location, reinterpret_cast<s32*>(vertices));

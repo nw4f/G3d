@@ -4,6 +4,8 @@
 #include <nw/g3d/g3d_config.h>
 #include <nw/g3d/fnd/g3d_GX2Struct.h>
 
+#include <cstring>
+
 #define NW_G3D_GFX_OBJECT(class_name)                                                              \
 public:                                                                                            \
     class_name();                                                                                  \
@@ -23,13 +25,7 @@ namespace nw { namespace g3d { namespace fnd {
 
 struct GfxBuffer_t
 {
-    union
-    {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-        void* pData;
-#endif
-        u32 dataUIntPtr;
-    };
+    SerializedPtr<void> pData;
     u32 size;
     u32 handle;
     u16 stride;
@@ -37,9 +33,6 @@ struct GfxBuffer_t
 
     union
     {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-        GX2StreamOutContext* pCtxPtr;
-#endif
         u32 ctxUIntPtr;
 
 #if NW_G3D_IS_GL && !defined( NW_STRIP_GL )
@@ -63,6 +56,12 @@ public:
         BUFFER_TYPE_UNIFORM,
     };
 #endif
+
+public:
+    void Clear()
+    {
+        memset(static_cast<GfxBuffer_t*>(this), 0, sizeof(GfxBuffer_t));
+    }
 
 public:
     void Setup();
@@ -261,6 +260,12 @@ class GfxFetchShader : public GfxFetchShader_t
     };
 
 public:
+    void Clear()
+    {
+        memset(static_cast<GfxFetchShader_t*>(this), 0, sizeof(GfxFetchShader_t));
+    }
+
+public:
     enum
     {
         SHADER_ALIGNMENT = 256 // GX2_SHADER_ALIGNMENT
@@ -307,84 +312,81 @@ public:
     void ResetVertexBuffer() const;
     */
 
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-public:
-    void SetDefault() { SetDefault(GetGX2FetchShader()->shaderPtr); }
+    void SetDefault() { SetDefault(GetGX2FetchShader()->shaderPtr.get()); }
 
     void SetLocation(int attribIndex, u32 location)
     {
-        SetLocation(GetGX2FetchShader()->shaderPtr, attribIndex, location);
+        SetLocation(GetGX2FetchShader()->shaderPtr.get(), attribIndex, location);
     }
 
     u32 GetLocation(int attribIndex) const
     {
-        return GetLocation(GetGX2FetchShader()->shaderPtr, attribIndex);
+        return GetLocation(GetGX2FetchShader()->shaderPtr.get(), attribIndex);
     }
 
     void SetBufferSlot(int attribIndex, u32 slot)
     {
-        SetBufferSlot(GetGX2FetchShader()->shaderPtr, attribIndex, slot);
+        SetBufferSlot(GetGX2FetchShader()->shaderPtr.get(), attribIndex, slot);
     }
 
     /*
     u32 GetBufferSlot(int attribIndex) const
     {
-        return GetBufferSlot(GetGX2FetchShader()->shaderPtr, attribIndex);
+        return GetBufferSlot(GetGX2FetchShader()->shaderPtr.get(), attribIndex);
     }*/
 
     void SetFormat(int attribIndex, GX2AttribFormat format)
     {
-        SetFormat(GetGX2FetchShader()->shaderPtr, attribIndex, format);
+        SetFormat(GetGX2FetchShader()->shaderPtr.get(), attribIndex, format);
     }
 
     /*
     GX2AttribFormat GetFormat(int attribIndex) const
     {
-        return GetFormat(GetGX2FetchShader()->shaderPtr, attribIndex);
+        return GetFormat(GetGX2FetchShader()->shaderPtr.get(), attribIndex);
     }
 
     void SetEndianSwapMode(int attribIndex, GX2EndianSwapMode mode)
     {
-        SetEndianSwapMode(GetGX2FetchShader()->shaderPtr, attribIndex, mode);
+        SetEndianSwapMode(GetGX2FetchShader()->shaderPtr.get(), attribIndex, mode);
     }
 
     GX2EndianSwapMode GetEndianSwapMode(int attribIndex) const
     {
-        return GetEndianSwapMode(GetGX2FetchShader()->shaderPtr, attribIndex);
+        return GetEndianSwapMode(GetGX2FetchShader()->shaderPtr.get(), attribIndex);
     }
 
     void SetDivisorSlot(int attribIndex, u32 slot)
     {
-        SetDivisorSlot(GetGX2FetchShader()->shaderPtr, attribIndex, slot);
+        SetDivisorSlot(GetGX2FetchShader()->shaderPtr.get(), attribIndex, slot);
     }
     */
 
     u32 GetDivisorSlot(int attribIndex) const
     {
-        return GetDivisorSlot(GetGX2FetchShader()->shaderPtr, attribIndex);
+        return GetDivisorSlot(GetGX2FetchShader()->shaderPtr.get(), attribIndex);
     }
 
     void SetOffset(int attribIndex, u32 offset)
     {
-        SetOffset(GetGX2FetchShader()->shaderPtr, attribIndex, offset);
+        SetOffset(GetGX2FetchShader()->shaderPtr.get(), attribIndex, offset);
     }
 
     u32 GetOffset(int attribIndex) const
     {
-        return GetOffset(GetGX2FetchShader()->shaderPtr, attribIndex);
+        return GetOffset(GetGX2FetchShader()->shaderPtr.get(), attribIndex);
     }
 
 protected:
     u32* GetVFInst(int attribIndex)
     {
-        return GetVFInst(GetGX2FetchShader()->shaderPtr, attribIndex);
+        return GetVFInst(GetGX2FetchShader()->shaderPtr.get(), attribIndex);
     }
 
     const u32* GetVFInst(int attribIndex) const
     {
-        return GetVFInst(GetGX2FetchShader()->shaderPtr, attribIndex);
+        return GetVFInst(GetGX2FetchShader()->shaderPtr.get(), attribIndex);
     }
-#endif // NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
 
 public:
     void SetDefault(void* pShader);

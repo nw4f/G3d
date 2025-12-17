@@ -22,6 +22,8 @@
 
 #include <nw/g3d/ut/g3d_Flag.h>
 
+#include <cassert>
+
 namespace nw { namespace g3d { namespace res {
 
 template<bool isReversed>
@@ -88,7 +90,7 @@ void Endian<isReversed>::Swap(ResFileData* data)
     Swap(&data->numSceneAnim);
     Swap(&data->numExternalFile);
 
-    Swap(&data->pUserPtr);
+    assert(data->pUserPtr.getOffset() == 0);
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
     {
@@ -153,7 +155,7 @@ void Endian<isReversed>::Swap(ResModelData* data)
     Swap(&data->numMaterial);
     Swap(&data->numUserData);
 
-    Swap(&data->pUserPtr);
+    assert(data->pUserPtr.getOffset() == 0);
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
     {
@@ -599,7 +601,7 @@ void Endian<isReversed>::Swap(ResSkeletonData* data)
     Swap(&data->ofsBoneDic);
     Swap(&data->ofsBoneArray);
     Swap(&data->ofsMtxToBoneTable);
-    Swap(&data->pUserPtr);
+    assert(data->pUserPtr.getOffset() == 0);
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
     {
@@ -668,7 +670,7 @@ void Endian<isReversed>::Swap(ResVertexData* data)
     Swap(&data->ofsVtxAttribDic);
     Swap(&data->ofsVtxBufferArray);
 
-    Swap(&data->pUserPtr);
+    assert(data->pUserPtr.getOffset() == 0);
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
     {
@@ -724,7 +726,7 @@ void Endian<isReversed>::Swap(ResShapeData* data)
     Swap(&data->ofsBoundingNodeArray);
     Swap(&data->ofsSubBoundingArray);
     Swap(&data->ofsSubMeshIndexArray);
-    Swap(&data->pUserPtr);
+    assert(data->pUserPtr.getOffset() == 0);
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
     {
@@ -887,7 +889,7 @@ void Endian<isReversed>::Swap(ResMaterialData* data)
     Swap(&data->ofsShaderParamDic);
     Swap(&data->ofsSrcParam);
     Swap(&data->ofsUserDataDic);
-    Swap(&data->pUserPtr);
+    assert(data->pUserPtr.getOffset() == 0);
 
     if (NW_G3D_STATIC_CONDITION(isReversed))
     {

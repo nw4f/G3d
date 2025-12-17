@@ -105,54 +105,6 @@ public:
     }
 };
 
-class BinPtr
-{
-public:
-    union
-    {
-        u32 addr;
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-        void* ptr;
-#endif
-    };
-
-    void* to_ptr() { return to_ptr<void>(); }
-
-    const void* to_ptr() const { return to_ptr<void>(); }
-
-    template <typename T>
-    T* to_ptr()
-    {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-        return static_cast<T*>(ptr);
-#else
-        return NULL;
-#endif
-    }
-
-    template <typename T>
-    const T* to_ptr() const
-    {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-        return static_cast<const T*>(ptr);
-#else
-        return NULL;
-#endif
-    }
-
-    BinPtr& set_ptr(void* ptr)
-    {
-#if NW_G3D_HOST_PTRSIZE == NW_G3D_TARGET_PTRSIZE
-        this->ptr = ptr;
-#else
-        NW_G3D_ASSERT(ptr == NULL);
-        NW_G3D_UNUSED(ptr);
-        this->addr = 0;
-#endif
-        return *this;
-    }
-};
-
 struct BinaryFileHeader
 {
     enum

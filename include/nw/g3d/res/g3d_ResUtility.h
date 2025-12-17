@@ -184,11 +184,6 @@ private:
         *data = offset;
     }
 
-    static void Swap(BinPtr* data)
-    {
-        Swap(&data->addr);
-    }
-
     template<class T>
     static void SwapArray(Offset* data, int size)
     {
