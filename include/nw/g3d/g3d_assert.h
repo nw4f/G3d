@@ -3,6 +3,8 @@
 
 #include <cafe/os.h>
 
+#include <cinttypes>
+
 #ifndef NW_G3D_ASSERTMSG
 #if NW_G3D_IS_DEBUG || NW_G3D_IS_DEVELOP
 #define NW_G3D_ASSERTMSG(exp, ...)                                                                 \
@@ -27,16 +29,16 @@
         static_cast<int>(index), static_cast<int>(size))
 
 #define NW_G3D_ASSERT_ALIGNMENT(value, alignment)                                                  \
-    NW_G3D_ASSERTMSG(static_cast<uint>((value) & (alignment - 1)) == 0,                            \
+    NW_G3D_ASSERTMSG((static_cast<uint>(value) & (alignment - 1)) == 0,                            \
         "NW: Failed alignment. \n"                                                                 \
         "value: 0x%x\n"                                                                            \
         "alignment: %d\n",                                                                         \
-        value, static_cast<int>(alignment))
+        static_cast<uint>(value), static_cast<int>(alignment))
 
 #define NW_G3D_ASSERT_ADDR_ALIGNMENT(addr, alignment)                                              \
     NW_G3D_ASSERTMSG((reinterpret_cast<uintptr_t>(addr) & (alignment - 1)) == 0,                   \
         "NW: Failed alignment. \n"                                                                 \
-        "ptr: 0x%x\n"                                                                              \
+        "ptr: 0x%" PRIXPTR "\n"                                                                     \
         "alignment: %d\n",                                                                         \
         reinterpret_cast<uintptr_t>(addr), static_cast<int>(alignment))
 
