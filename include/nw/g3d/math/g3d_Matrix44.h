@@ -29,9 +29,6 @@ struct Mtx44_t
 #endif // defined( __ghs__ )
     };
 };
-#if defined( _MSC_VER )
-#pragma warning(pop)
-#endif
 
 class Mtx44 : public Mtx44_t
 {
