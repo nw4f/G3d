@@ -3,7 +3,7 @@
 
 #include <nw/g3d/g3d_config.h>
 
-#include <string.h>
+#include <cstring>
 
 namespace nw { namespace g3d { namespace ut {
 
@@ -18,27 +18,27 @@ bool IsPowerOfTwo(size_t size)
     return ((size - 1) & size) == 0;
 }
 NW_G3D_FORCE_INLINE
-void* AddOffset(void* ptr, size_t offset)
+void* AddOffset(void* ptr, ptrdiff_t offset)
 {
     return static_cast<char*>(ptr) + offset;
 }
 
 NW_G3D_FORCE_INLINE
-const void* AddOffset(const void* ptr, size_t offset)
+const void* AddOffset(const void* ptr, ptrdiff_t offset)
 {
     return static_cast<const char*>(ptr) + offset;
 }
 
 template <typename ResultT>
 NW_G3D_FORCE_INLINE
-ResultT* AddOffset(void* ptr, size_t offset)
+ResultT* AddOffset(void* ptr, ptrdiff_t offset)
 {
     return static_cast<ResultT*>(AddOffset(ptr, offset));
 }
 
 template <typename ResultT>
 NW_G3D_FORCE_INLINE
-const ResultT* AddOffset(const void* ptr, size_t offset)
+const ResultT* AddOffset(const void* ptr, ptrdiff_t offset)
 {
     return static_cast<const ResultT*>(AddOffset(ptr, offset));
 }
