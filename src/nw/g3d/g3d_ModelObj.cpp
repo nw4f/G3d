@@ -70,14 +70,23 @@ void ModelObj::Sizer::Calc(const InitArg& arg)
     }
 
     int idx = 0;
+    chunk[idx].align = SkeletonObj::BUFFER_ALIGNMENT;
     chunk[idx++].size = sizeSkeleton;
+    chunk[idx].align = ShapeObj::BUFFER_ALIGNMENT;
     chunk[idx++].size = sizeShape;
+    chunk[idx].align = MaterialObj::BUFFER_ALIGNMENT;
     chunk[idx++].size = sizeMaterial;
+    chunk[idx].align = alignof(SkeletonObj);
     chunk[idx++].size = sizeof(SkeletonObj);
+    chunk[idx].align = alignof(ShapeObj);
     chunk[idx++].size = sizeof(ShapeObj) * numShape;
+    chunk[idx].align = alignof(MaterialObj);
     chunk[idx++].size = sizeof(MaterialObj) * numMaterial;
+    chunk[idx].align = alignof(bit32);
     chunk[idx++].size = Align(numBone, 32) >> 3;
+    chunk[idx].align = alignof(bit32);
     chunk[idx++].size = Align(numMaterial, 32) >> 3;
+    chunk[idx].align = alignof(Sphere);
     chunk[idx++].size = arg.IsBoundingEnabled() ? sizeof(Sphere) : 0;
     NW_G3D_ASSERT(idx == NUM_CHUNK);
 

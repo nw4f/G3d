@@ -40,8 +40,11 @@ void SkeletonObj::Sizer::Calc(const InitArg& arg)
     int scaleMode = pRes->GetScaleMode();
 
     int idx = 0;
+    chunk[idx].align = LL_CACHE_FETCH_SIZE;
     chunk[idx++].size = Align(sizeof(Mtx34) * numBone, LL_CACHE_FETCH_SIZE);
+    chunk[idx].align = LL_CACHE_FETCH_SIZE;
     chunk[idx++].size = Align(sizeof(LocalMtx) * numBone, LL_CACHE_FETCH_SIZE);
+    chunk[idx].align = alignof(Vec3);
     chunk[idx++].size = scaleMode == SCALE_SOFTIMAGE ? sizeof(Vec3) * numBone : 0;
     NW_G3D_ASSERT(idx == NUM_CHUNK);
 

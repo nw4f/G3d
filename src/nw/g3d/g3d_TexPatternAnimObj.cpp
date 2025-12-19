@@ -14,10 +14,14 @@ void TexPatternAnimObj::Sizer::Calc(const InitArg& arg)
     int numPatAnim = arg.GetMaxPatAnimCount();
 
     int idx = 0;
-    chunk[idx++].size = Align(sizeof(u16) * numPatAnim);
+    chunk[idx].align = alignof(u16);
+    chunk[idx++].size = sizeof(u16) * numPatAnim;
+    chunk[idx].align = alignof(bit32);
     chunk[idx++].size = sizeof(bit32) * numBind;
-    chunk[idx++].size = Align(sizeof(s8) * numPatAnim);
-    chunk[idx++].size = arg.IsContextEnabled() ? Align(sizeof(AnimFrameCache) * numCurve) : 0;
+    chunk[idx].align = alignof(s8);
+    chunk[idx++].size = sizeof(s8) * numPatAnim;
+    chunk[idx].align = alignof(AnimFrameCache);
+    chunk[idx++].size = arg.IsContextEnabled() ? sizeof(AnimFrameCache) * numCurve : 0;
 
     NW_G3D_ASSERT(idx == NUM_CHUNK);
 

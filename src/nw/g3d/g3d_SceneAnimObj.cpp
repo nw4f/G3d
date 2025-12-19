@@ -13,8 +13,10 @@ void CameraAnimObj::Sizer::Calc(const InitArg& arg)
     int numCurve = arg.GetMaxCurveCount();
 
     int idx = 0;
+    chunk[idx].align = alignof(CameraAnimResult);
     chunk[idx++].size = sizeof(CameraAnimResult);
-    chunk[idx++].size = arg.IsContextEnabled() ? Align(sizeof(AnimFrameCache) * numCurve) : 0;
+    chunk[idx].align = alignof(AnimFrameCache);
+    chunk[idx++].size = arg.IsContextEnabled() ? sizeof(AnimFrameCache) * numCurve : 0;
     NW_G3D_ASSERT(idx == NUM_CHUNK);
 
     CalcOffset(chunk, NUM_CHUNK);

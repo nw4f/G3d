@@ -12,7 +12,8 @@ public:
     struct Chunk
     {
         size_t size;
-        ptrdiff_t offset;
+        size_t align;
+        size_t offset;
     };
 
     Sizer() : pChunk(NULL), totalSize(0) {}
@@ -43,10 +44,33 @@ protected:
         pChunk[idx].offset = 0;
         for (; idx < count - 1; ++idx)
         {
-            NW_G3D_ASSERT(IsAligned(pChunk[idx].size));
-            pChunk[idx + 1].offset = pChunk[idx].offset + pChunk[idx].size;
+            size_t offset = pChunk[idx].offset + pChunk[idx].size;
+            if (pChunk[idx + 1].size > 0)
+            {
+                size_t align = pChunk[idx + 1].align;
+                if (align > 1)
+                {
+                    NW_G3D_ASSERT(IsPowerOfTwo(align));
+                    size_t mis = offset & (align - 1);
+                    if (mis != 0)
+                    {
+                        size_t pad = align - mis;
+                        pChunk[idx].size += pad;
+                        offset += pad;
+                    }
+                }
+            }
+            pChunk[idx + 1].offset = offset;
         }
         totalSize = pChunk[idx].offset + pChunk[idx].size;
+        size_t align = alignof(max_align_t);
+        NW_G3D_ASSERT(IsPowerOfTwo(align));
+        size_t mis = totalSize & (align - 1);
+        if (mis != 0)
+        {
+            size_t pad = align - mis;
+            totalSize += pad;
+        }
         this->pChunk = pChunk;
     }
 

@@ -10,9 +10,12 @@ void MaterialObj::Sizer::Calc(const InitArg& arg)
     size_t dirtyFlagBufferSize = Align(numDirtyFlag, 32) >> 3;
 
     int idx = 0;
+    chunk[idx].align = alignof(bit32);
     chunk[idx++].size = dirtyFlagBufferSize;
 
-    chunk[idx++].size = Align(pRes->GetSrcParamSize());
+    chunk[idx].align = alignof(u32);
+    chunk[idx++].size = pRes->GetSrcParamSize();
+    chunk[idx].align = alignof(ResTexture*);
     chunk[idx++].size = sizeof(ResTexture*) * pRes->GetTextureCount();
     NW_G3D_ASSERT(idx == NUM_CHUNK);
 

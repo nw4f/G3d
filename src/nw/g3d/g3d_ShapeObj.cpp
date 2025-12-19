@@ -249,10 +249,14 @@ void ShapeObj::Sizer::Calc(const InitArg& arg)
     int numKeyShape = pRes->GetKeyShapeCount();
 
     int idx = 0;
+    chunk[idx].align = CACHE_BLOCK_SIZE;
     chunk[idx++].size = subboundingSize;
+    chunk[idx].align = alignof(GfxBuffer);
     chunk[idx++].size = sizeof(GfxBuffer) * numShpBlock;
+    chunk[idx].align = alignof(float);
     chunk[idx++].size = sizeof(float) * numKeyShape;
 
+    chunk[idx].align = alignof(Sphere);
     chunk[idx++].size = boundingEnabled ? sizeof(Sphere) * NUM_COORD : 0;
 
     NW_G3D_ASSERT(idx == NUM_CHUNK);
