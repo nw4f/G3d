@@ -245,7 +245,7 @@ public:
     void SetCallbackBoneIndex(int boneIndex)
     {
         m_CallbackBone = (boneIndex >= 0 && boneIndex < m_NumBone) ?
-            static_cast<u16>(boneIndex) : ICalcWorldCallback::INVALID_BONE;
+            static_cast<u16>(boneIndex) : static_cast<u16>(ICalcWorldCallback::INVALID_BONE);
     }
 
     int GetCallbackBoneIndex() const
