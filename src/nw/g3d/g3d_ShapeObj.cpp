@@ -94,6 +94,26 @@ void Plane::Set(const Vec3& p0, const Vec3& p1, const Vec3& p2)
     dist = -Vec3::Dot(normal, p0);
 }
 
+void ViewVolume::SetPerspective(
+    float fovy, float aspect, float zNear, float zFar, const Mtx34& viewToWorld)
+{
+    float yNear = zNear * Math::Tan(fovy * 0.5f);
+    float xNear = yNear * aspect;
+    SetFrustum(yNear, -yNear, -xNear, xNear, zNear, zFar, viewToWorld);
+}
+
+void ViewVolume::SetPerspectiveOffset(
+    float fovy, float aspect, float zNear, float zFar, const Mtx34& viewToWorld, const Vec2& offset)
+{
+    float yNear = zNear * Math::Tan(fovy * 0.5f);
+    float xNear = yNear * aspect;
+    float xOffset = xNear * offset.x * 2.0f;
+    float yOffset = yNear * offset.y * 2.0f;
+
+    SetFrustum(yNear + yOffset, -yNear + yOffset, -xNear + xOffset, xNear + xOffset,
+        zNear, zFar, viewToWorld);
+}
+
 void ViewVolume::SetFrustum(
     float top, float bottom, float left, float right, float zNear, float zFar,
     const Mtx34& viewToWorld)
@@ -129,6 +149,37 @@ void ViewVolume::SetFrustum(
     planes[3].Set(pt[4], pt[7], pt[6]);
     planes[4].Set(eye, pt[0], pt[1]);
     planes[5].Set(eye, pt[2], pt[3]);
+    numPlanes = 6;
+    flag = 0;
+}
+
+void ViewVolume::SetOrtho(
+    float top, float bottom, float left, float right, float zNear, float zFar,
+    const Mtx34& viewToWorld)
+{
+    Vec3 pt[] = {
+        Vec3::Make(left, top, -zNear),
+        Vec3::Make(right, top, -zNear),
+        Vec3::Make(right, bottom, -zNear),
+        Vec3::Make(left, bottom, -zNear),
+        Vec3::Make(left, top, -zFar),
+        Vec3::Make(right, top, -zFar),
+        Vec3::Make(right, bottom, -zFar),
+        Vec3::Make(left, bottom, -zFar),
+    };
+
+    for (int i = 0; i < 8; ++i)
+    {
+        pt[i].Mul(viewToWorld, pt[i]);
+    }
+    aabb.Set(pt, 8);
+
+    planes[0].Set(pt[0], pt[7], pt[4]);
+    planes[1].Set(pt[1], pt[5], pt[6]);
+    planes[2].Set(pt[0], pt[1], pt[2]);
+    planes[3].Set(pt[4], pt[7], pt[6]);
+    planes[4].Set(pt[0], pt[4], pt[5]);
+    planes[5].Set(pt[2], pt[6], pt[7]);
     numPlanes = 6;
     flag = 0;
 }
